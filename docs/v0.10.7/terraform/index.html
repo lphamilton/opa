@@ -1,0 +1,303 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="Terraform Testing"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/terraform/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/terraform/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Terraform Testing</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/terraform/>Terraform Testing</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#goals>Goals</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#steps>Steps</a><ul><li><a href=#1-create-and-save-a-terraform-plan>1. Create and save a Terraform plan</a></li><li><a href=#2-convert-the-terraform-plan-into-json>2. Convert the Terraform plan into JSON</a></li><li><a href=#3-write-the-opa-policy-to-check-the-plan>3. Write the OPA policy to check the plan</a></li><li><a href=#4-evaluate-the-opa-policy-on-the-terraform-plan>4. Evaluate the OPA policy on the Terraform plan</a></li><li><a href=#5-create-a-large-terraform-plan-and-evaluate-it>5. Create a Large Terraform plan and Evaluate it</a></li><li><a href=#6-optional-run-opa-as-a-daemon-and-evaluate-policy>6. (Optional) Run OPA as a daemon and evaluate policy</a></li></ul></li><li><a href=#wrap-up>Wrap Up</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Terraform Testing</p></div></section><section class=section><div class=content><p>Terraform lets you describe the infrastructure you want and automatically creates, deletes, and modifies
+your existing infrastructure to match. OPA makes it possible to write policies that test the changes
+Terraform is about to make before it makes them. Such tests help in different ways:</p><ul><li>tests help individual developers sanity check their Terraform changes</li><li>tests can auto-approve run-of-the-mill infrastructure changes and reduce
+the burden of peer-review</li><li>tests can help catch problems that arise when applying Terraform to production after applying it to staging</li></ul><h2 id=goals>Goals</h2><p>In this tutorial, you&rsquo;ll learn how to use OPA to implement unit tests for Terraform plans that create
+and delete auto-scaling groups and servers.</p><h2 id=prerequisites>Prerequisites</h2><p>This tutorial requires</p><ul><li><a href=https://releases.hashicorp.com/terraform/0.8.8/>Terraform 0.8</a></li><li><a href=https://github.com/open-policy-agent/opa/releases>OPA</a></li><li><a href=https://github.com/palantir/tfjson>tfjson</a> (<code>go get github.com/palantir/tfjson</code>): a Go utility that converts Terraform plans into JSON</li></ul><p>(This tutorial <em>should</em> also work with the <a href=https://www.terraform.io/downloads.html>latest version of Terraform</a>
+and the <a href=https://github.com/philips/tfjson>latest version of tfjson</a>, but it is untested. Contributions welcome!)</p><h2 id=steps>Steps</h2><h3 id=1-create-and-save-a-terraform-plan>1. Create and save a Terraform plan</h3><p>Create a <a href=https://www.terraform.io/docs/index.html>Terraform</a> file that includes an
+auto-scaling group and a server on AWS. (You will need to modify the <code>shared_credentials_file</code>
+to point to your AWS credentials.)</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;main.tf <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>provider &#34;aws&#34; {
+</span><span style=color:#4e9a06>    region = &#34;us-west-1&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_instance&#34; &#34;web&#34; {
+</span><span style=color:#4e9a06>  instance_type = &#34;t2.micro&#34;
+</span><span style=color:#4e9a06>  ami = &#34;ami-09b4b74c&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_autoscaling_group&#34; &#34;my_asg&#34; {
+</span><span style=color:#4e9a06>  availability_zones        = [&#34;us-west-1a&#34;]
+</span><span style=color:#4e9a06>  name                      = &#34;my_asg&#34;
+</span><span style=color:#4e9a06>  max_size                  = 5
+</span><span style=color:#4e9a06>  min_size                  = 1
+</span><span style=color:#4e9a06>  health_check_grace_period = 300
+</span><span style=color:#4e9a06>  health_check_type         = &#34;ELB&#34;
+</span><span style=color:#4e9a06>  desired_capacity          = 4
+</span><span style=color:#4e9a06>  force_delete              = true
+</span><span style=color:#4e9a06>  launch_configuration      = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_launch_configuration&#34; &#34;my_web_config&#34; {
+</span><span style=color:#4e9a06>    name = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>    image_id = &#34;ami-09b4b74c&#34;
+</span><span style=color:#4e9a06>    instance_type = &#34;t2.micro&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Then ask Terraform to calculate what changes it will make and store the output in <code>plan.binary</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>terraform plan --out tfplan.binary</code></pre></div><h3 id=2-convert-the-terraform-plan-into-json>2. Convert the Terraform plan into JSON</h3><p>Use the <code>tfjson</code> tool to convert the Terraform plan into JSON so that OPA can read the plan.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>tfjson tfplan.binary &gt; tfplan.json</code></pre></div><p>Here is the expected contents of <code>tfplan.json</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;aws_autoscaling_group.my_asg&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;arn&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;availability_zones.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;availability_zones.3205754986&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;us-west-1a&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;default_cooldown&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;desired_capacity&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;4&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy_tainted&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;force_delete&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;true&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;health_check_grace_period&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;300&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;health_check_type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ELB&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;launch_configuration&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;my_web_config&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;load_balancers.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;max_size&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;5&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;metrics_granularity&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;1Minute&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;min_size&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;my_asg&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;protect_from_scale_in&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;false&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;vpc_zone_identifier.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;wait_for_capacity_timeout&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;10m&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#204a87;font-weight:700>&#34;aws_instance.web&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;ami&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ami-09b4b74c&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;associate_public_ip_address&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;availability_zone&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy_tainted&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;ebs_block_device.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;ephemeral_block_device.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;instance_state&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;instance_type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;t2.micro&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;ipv6_addresses.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;key_name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;network_interface_id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;placement_group&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;private_dns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;private_ip&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;public_dns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;public_ip&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;root_block_device.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;security_groups.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;source_dest_check&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;true&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;subnet_id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;tenancy&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;vpc_security_group_ids.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#204a87;font-weight:700>&#34;aws_launch_configuration.my_web_config&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;associate_public_ip_address&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;false&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;destroy_tainted&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;ebs_block_device.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;ebs_optimized&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;enable_monitoring&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;true&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;image_id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ami-09b4b74c&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;instance_type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;t2.micro&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;key_name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;my_web_config&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;root_block_device.#&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#204a87;font-weight:700>&#34;destroy&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=3-write-the-opa-policy-to-check-the-plan>3. Write the OPA policy to check the plan</h3><p>The policy computes a score for a Terraform that combines
+* The number of deletions of each resource type
+* The number of creations of each resource type
+* The number of modifications of each resource type</p><p>The policy authorizes the plan when the score for the plan is below a threshold
+and there are no changes made to any IAM resources.
+(For simplicity, the threshold in this tutorial is the same for everyone, but in
+practice you would vary the threshold depending on the user.)</p><p><strong>terraform.rego</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>terraform</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>analysis</span>
+
+<span style=color:#000>import</span> <span style=color:#000>input</span> <span style=color:#000>as</span> <span style=color:#000>tfplan</span>
+
+<span style=color:#8f5902;font-style:italic>########################</span>
+<span style=color:#8f5902;font-style:italic># Parameters for Policy</span>
+<span style=color:#8f5902;font-style:italic>########################</span>
+
+<span style=color:#8f5902;font-style:italic># acceptable score for automated authorization</span>
+<span style=color:#000>blast_radius</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#0000cf;font-weight:700>30</span>
+
+<span style=color:#8f5902;font-style:italic># weights assigned for each operation on each resource-type</span>
+<span style=color:#000>weights</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;aws_autoscaling_group&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;delete&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>100</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;create&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>10</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;modify&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;aws_instance&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;delete&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>10</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;create&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;modify&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Consider exactly these resource types in calculations</span>
+<span style=color:#000>resource_types</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;aws_autoscaling_group&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;aws_instance&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;aws_iam&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;aws_launch_configuration&#34;</span><span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic>#########</span>
+<span style=color:#8f5902;font-style:italic># Policy</span>
+<span style=color:#8f5902;font-style:italic>#########</span>
+
+<span style=color:#8f5902;font-style:italic># Authorization holds if score for the plan is acceptable and no changes are made to IAM</span>
+<span style=color:#000>default</span> <span style=color:#000>authz</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>
+<span style=color:#000>authz</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>score</span> <span style=color:#ce5c00;font-weight:700>&lt;</span> <span style=color:#000>blast_radius</span>
+    <span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>touches_iam</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Compute the score for a Terraform plan as the weighted sum of deletions, creations, modifications</span>
+<span style=color:#000>score</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>s</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span> <span style=color:#000>x</span> <span style=color:#ce5c00;font-weight:700>|</span>
+            <span style=color:#000>crud</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>weights</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span>
+            <span style=color:#000>del</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>crud</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;delete&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>*</span> <span style=color:#000>num_deletes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span>
+            <span style=color:#204a87;font-weight:700>new</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>crud</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;create&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>*</span> <span style=color:#000>num_creates</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span>
+            <span style=color:#000>mod</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>crud</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;modify&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>*</span> <span style=color:#000>num_modifies</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span>
+            <span style=color:#000>x</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>del</span> <span style=color:#ce5c00;font-weight:700>+</span> <span style=color:#204a87;font-weight:700>new</span> <span style=color:#ce5c00;font-weight:700>+</span> <span style=color:#000>mod</span>
+    <span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>s</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>sum</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>all</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Whether there is any change to IAM</span>
+<span style=color:#000>touches_iam</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>instance_names</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;aws_iam&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>count</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>all</span><span style=color:#000;font-weight:700>)</span> <span style=color:#ce5c00;font-weight:700>&gt;</span> <span style=color:#0000cf;font-weight:700>0</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic>####################</span>
+<span style=color:#8f5902;font-style:italic># Terraform Library</span>
+<span style=color:#8f5902;font-style:italic>####################</span>
+
+<span style=color:#8f5902;font-style:italic># list of all resources of a given type</span>
+<span style=color:#000>instance_names</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>all</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>resource_types</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span> <span style=color:#ce5c00;font-weight:700>|</span>
+        <span style=color:#000>tfplan</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>_</span>
+        <span style=color:#000>startswith</span><span style=color:#000;font-weight:700>(</span><span style=color:#204a87>name</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>resource_type</span><span style=color:#000;font-weight:700>)</span>
+    <span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># number of deletions of resources of a given type</span>
+<span style=color:#000>num_deletes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>num</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>resource_types</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>instance_names</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>deletions</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span> <span style=color:#ce5c00;font-weight:700>|</span> <span style=color:#204a87>name</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>all</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span> <span style=color:#000>tfplan</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span><span style=color:#ce5c00;font-weight:700>][</span><span style=color:#4e9a06>&#34;destroy&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#204a87;font-weight:700>true</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>num</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>count</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>deletions</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># number of creations of resources of a given type</span>
+<span style=color:#000>num_creates</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>num</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>resource_types</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>instance_names</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>creates</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span> <span style=color:#ce5c00;font-weight:700>|</span> <span style=color:#000>all</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87>name</span><span style=color:#000;font-weight:700>;</span> <span style=color:#000>tfplan</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span><span style=color:#ce5c00;font-weight:700>][</span><span style=color:#4e9a06>&#34;id&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>num</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>count</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>creates</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># number of modifications to resources of a given type</span>
+<span style=color:#000>num_modifies</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>num</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>resource_types</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>all</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>instance_names</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>resource_type</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>modifies</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span> <span style=color:#ce5c00;font-weight:700>|</span> <span style=color:#204a87>name</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>all</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span> <span style=color:#000>obj</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>tfplan</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#204a87>name</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>;</span> <span style=color:#000>obj</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;destroy&#34;</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>;</span> <span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>obj</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;id&#34;</span><span style=color:#ce5c00;font-weight:700>]]</span>
+    <span style=color:#000>num</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>count</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>modifies</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=4-evaluate-the-opa-policy-on-the-terraform-plan>4. Evaluate the OPA policy on the Terraform plan</h3><p>To evaluate the policy against that plan, you hand OPA the policy, the Terraform plan as input, and
+ask it to evaluate <code>data.terraform.analysis.authz</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>opa <span style=color:#204a87>eval</span> --data terraform.rego --input tfplan.json <span style=color:#4e9a06>&#34;data.terraform.analysis.authz&#34;</span></code></pre></div><p>If you&rsquo;re curious, you can ask for the score that the policy used to make the authorization decision.
+In our example, it is 11 (10 for the creation of the auto-scaling group and 1 for the creation of the server).</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>opa <span style=color:#204a87>eval</span> --data terraform.rego --input tfplan.json <span style=color:#4e9a06>&#34;data.terraform.analysis.score&#34;</span></code></pre></div><p>If as suggested in the previous step, you want to modify your policy to make an authorization decision
+based on both the user and the Terraform plan, the input you would give to OPA would take the form
+<code>{&quot;user&quot;: &lt;user&gt;, &quot;plan&quot;: &lt;plan&gt;}</code>, and your policy would reference the user with <code>input.user</code> and
+the plan with <code>input.plan</code>. You could even go so far as to provide the Terraform state file and the AWS
+EC2 data to OPA and write policy using all of that context.</p><h3 id=5-create-a-large-terraform-plan-and-evaluate-it>5. Create a Large Terraform plan and Evaluate it</h3><p>Create a Terraform plan that creates enough resources to exceed the blast-radius permitted
+by policy.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;main.tf <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>provider &#34;aws&#34; {
+</span><span style=color:#4e9a06>    region = &#34;us-west-1&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_instance&#34; &#34;web&#34; {
+</span><span style=color:#4e9a06>  instance_type = &#34;t2.micro&#34;
+</span><span style=color:#4e9a06>  ami = &#34;ami-09b4b74c&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_autoscaling_group&#34; &#34;my_asg&#34; {
+</span><span style=color:#4e9a06>  availability_zones        = [&#34;us-west-1a&#34;]
+</span><span style=color:#4e9a06>  name                      = &#34;my_asg&#34;
+</span><span style=color:#4e9a06>  max_size                  = 5
+</span><span style=color:#4e9a06>  min_size                  = 1
+</span><span style=color:#4e9a06>  health_check_grace_period = 300
+</span><span style=color:#4e9a06>  health_check_type         = &#34;ELB&#34;
+</span><span style=color:#4e9a06>  desired_capacity          = 4
+</span><span style=color:#4e9a06>  force_delete              = true
+</span><span style=color:#4e9a06>  launch_configuration      = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_launch_configuration&#34; &#34;my_web_config&#34; {
+</span><span style=color:#4e9a06>    name = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>    image_id = &#34;ami-09b4b74c&#34;
+</span><span style=color:#4e9a06>    instance_type = &#34;t2.micro&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_autoscaling_group&#34; &#34;my_asg2&#34; {
+</span><span style=color:#4e9a06>  availability_zones        = [&#34;us-west-2a&#34;]
+</span><span style=color:#4e9a06>  name                      = &#34;my_asg2&#34;
+</span><span style=color:#4e9a06>  max_size                  = 6
+</span><span style=color:#4e9a06>  min_size                  = 1
+</span><span style=color:#4e9a06>  health_check_grace_period = 300
+</span><span style=color:#4e9a06>  health_check_type         = &#34;ELB&#34;
+</span><span style=color:#4e9a06>  desired_capacity          = 4
+</span><span style=color:#4e9a06>  force_delete              = true
+</span><span style=color:#4e9a06>  launch_configuration      = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>resource &#34;aws_autoscaling_group&#34; &#34;my_asg3&#34; {
+</span><span style=color:#4e9a06>  availability_zones        = [&#34;us-west-2b&#34;]
+</span><span style=color:#4e9a06>  name                      = &#34;my_asg3&#34;
+</span><span style=color:#4e9a06>  max_size                  = 7
+</span><span style=color:#4e9a06>  min_size                  = 1
+</span><span style=color:#4e9a06>  health_check_grace_period = 300
+</span><span style=color:#4e9a06>  health_check_type         = &#34;ELB&#34;
+</span><span style=color:#4e9a06>  desired_capacity          = 4
+</span><span style=color:#4e9a06>  force_delete              = true
+</span><span style=color:#4e9a06>  launch_configuration      = &#34;my_web_config&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Generate the Terraform plan and convert it to JSON.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>terraform plan --out tfplan_large.binary
+tfjson tfplan_large.binary &gt; tfplan_large.json</code></pre></div><p>Evaluate the policy to see that it fails the policy tests and check the score.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>opa <span style=color:#204a87>eval</span> --data terraform.rego --input tfplan_large.json <span style=color:#4e9a06>&#34;data.terraform.analysis.authz&#34;</span>
+opa <span style=color:#204a87>eval</span> --data terraform.rego --input tfplan_large.json <span style=color:#4e9a06>&#34;data.terraform.analysis.score&#34;</span></code></pre></div><h3 id=6-optional-run-opa-as-a-daemon-and-evaluate-policy>6. (Optional) Run OPA as a daemon and evaluate policy</h3><p>In addition to running OPA from the command-line, you can run it as a daemon loaded with the Terraform policy and
+then interact with it using its HTTP API. First, start the daemon:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>opa run -s terraform.rego</code></pre></div><p>Then in a separate terminal, use OPA&rsquo;s HTTP API to evaluate the policy against the two Terraform plans.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl localhost:8181/v0/data/terraform/analysis/authz -d @tfplan.json
+curl localhost:8181/v0/data/terraform/analysis/authz -d @tfplan_large.json</code></pre></div><h2 id=wrap-up>Wrap Up</h2><p>Congratulations for finishing the tutorial!</p><p>You learned a number of things about Terraform Testing with OPA:</p><ul><li>OPA gives you fine-grained policy control over Terraform plans.</li><li>You can use data other than the plan itself (e.g. the user) when writing authorization policies.</li></ul><p>Keep in mind that it&rsquo;s up to you to decide how to use OPA&rsquo;s Terraform tests and authorization decision. Here are some ideas.
+* Add it as part of your Terraform wrapper to implement unit tests on Terraform plans
+* Use it to automatically approve run-of-the-mill Terraform changes to reduce the burden of peer-review
+* Embed it into your deployment system to catch problems that arise when applying Terraform to production after applying it to staging</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

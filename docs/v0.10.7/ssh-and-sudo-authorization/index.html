@@ -1,0 +1,254 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="SSH and sudo Authorization"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/ssh-and-sudo-authorization/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/ssh-and-sudo-authorization/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | SSH and sudo Authorization</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#goals>Goals</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#steps>Steps</a><ul><li><a href=#1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</a></li><li><a href=#2-load-policies-and-data-into-opa>2. Load policies and data into OPA.</a></li><li><a href=#3-ssh-and-sudo-as-a-user-with-the-admin-role>3. SSH and sudo as a user with the <code>admin</code> role.</a></li><li><a href=#4-ssh-as-a-user-without-the-admin-role>4. SSH as a user without the <code>admin</code> role.</a></li><li><a href=#5-elevate-a-user-s-rights-through-policy>5. Elevate a user&rsquo;s rights through policy.</a></li></ul></li><li><a href=#wrap-up>Wrap Up</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">SSH and sudo Authorization</p></div></section><section class=section><div class=content><p>Host-level access controls are an important part of every organization&rsquo;s
+security strategy. Using <a href=http://tldp.org/HOWTO/User-Authentication-HOWTO/x115.html>Linux-PAM</a> and OPA
+we can extend policy-based access control to SSH and sudo.</p><h2 id=goals>Goals</h2><p>This tutorial shows how you can use OPA and Linux-PAM to enforce fine-grained,
+host-level access controls over SSH and sudo.</p><p>Linux-PAM can be configured to delegate authorization decisions to plugins
+(shared libraries). In this case, we have created an OPA-based plugin that can
+be configured to authorize SSH and sudo access. The OPA-based Linux-PAM plugin
+used in this tutorial can be found at <a href=https://github.com/open-policy-agent/contrib/tree/master/pam_authz>open-policy-agent/contrib</a>.</p><p>For this tutorial, our desired policy is:</p><ul><li>Admins can SSH into any host and run sudo commands.</li><li>Normal users can SSH into hosts that they have <em>contributed</em> to and run sudo commands.</li></ul><p>Furthermore, we&rsquo;ll assume we have the following set of users and hosts:</p><ul><li><code>frontend-dev</code> is a developer who contributes to the app running on the <code>frontend</code> host.</li><li><code>backend-dev</code> is a developer who contributes to the app running on the <code>backend</code> host.</li><li><code>ops</code> is an administrator for the organization.</li></ul><p>Authentication (verifying user identity) is outside the scope of OPA&rsquo;s
+responsibility so this tutorial relies on identities being statically
+defined. In real-world scenarios authentication can be delegated to SSH itself
+(authorized_keys) or other identity management systems.</p><p>Let&rsquo;s get started.</p><h2 id=prerequisites>Prerequisites</h2><p>This tutorial requires <a href=https://docs.docker.com/compose/install/>Docker Compose</a> to run dummy SSH hosts along
+with OPA. The dummy SSH hosts are just containers running sshd inside.</p><h2 id=steps>Steps</h2><h3 id=1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</h3><p>First, create a <code>tutorial-docker-compose.yaml</code> file that runs OPA and the containers that
+represent our backend and frontend hosts.</p><p><strong>tutorial-docker-compose.yaml</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#39;2&#39;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>services<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># WARNING: OPA is NOT running with an authorization policy configured. This</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># means that clients can read and write policies in OPA. If you are</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># deploying OPA in an insecure environment, be sure to configure</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># authentication and authorization on the daemon. See the Security page for</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># details: https://www.openpolicyagent.org/docs/security.html.</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>command<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;run&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;--server&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;--log-level=debug&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>frontend<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/demo-pam<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;2222:22&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>volumes<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>./frontend_host_id.json<span style=color:#000;font-weight:700>:</span>/etc/host_identity.json<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>backend<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/demo-pam<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;2223:22&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>volumes<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>./backend_host_id.json<span style=color:#000;font-weight:700>:</span>/etc/host_identity.json</code></pre></div><p>The <code>tutorial-docker-compose.yaml</code> file requires two other local files:
+<code>frontend_host_id.json</code> and <code>backend_host_id.json</code>. These files are mounted
+into the containers representing our hosts. The content of the file provides
+<em>context</em> that the PAM module provides as input when executing queries
+against OPA.</p><p>Create the extra files required by tutorial-docker-compose.yaml:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#204a87>echo</span> <span style=color:#4e9a06>&#39;{&#34;host_id&#34;: &#34;frontend&#34;}&#39;</span> &gt; frontend_host_id.json
+<span style=color:#204a87>echo</span> <span style=color:#4e9a06>&#39;{&#34;host_id&#34;: &#34;backend&#34;}&#39;</span> &gt; backend_host_id.json</code></pre></div><blockquote><p>In real-world scenarios, these files could contain arbitrary information that we want to expose to the policy.</p></blockquote><p>Finally, run <code>docker-compose</code> to pull and run the containers.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker-compose -f tutorial-docker-compose.yaml up</code></pre></div><p>This tutorial uses a special Docker image named <code>openpolicyagent/demo-pam</code> to simulate an SSH server.
+This image contains pre-created Linux accounts for our users, and the required PAM module is
+pre-configured inside the <code>sudo</code> and <code>sshd</code> files in <code>/etc/pam.d/</code>.</p><h3 id=2-load-policies-and-data-into-opa>2. Load policies and data into OPA.</h3><p>In another terminal, load the policies and data into OPA that will control access to the hosts.</p><p>First, create a policy that will tell the PAM module to collect context that is required for authorization.
+For more details on what this policy should look like, see
+<a href=https://github.com/open-policy-agent/contrib/tree/master/pam_authz/pam#pull>this documentation</a>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;pull.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package pull
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Which files should be loaded into the context?
+</span><span style=color:#4e9a06>files = [&#34;/etc/host_identity.json&#34;]
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Which environment variables should be loaded into the context?
+</span><span style=color:#4e9a06>env_vars = []
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Load this policy into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @pull.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/pull</code></pre></div><p>Next, create the policies that will authorize SSH and sudo requests.
+The <code>input</code> which makes up the authorization context in the policy below will also
+include some default values, such as the username making the request. See
+<a href=https://github.com/open-policy-agent/contrib/tree/master/pam_authz/pam#authz>this documentation</a>
+to get a better understanding of what the <code>input</code> to the authorization policy will look like.</p><p>Unlike the <em>pull</em> policy, we&rsquo;ll create separate <em>authz</em> policies
+for SSH and <code>sudo</code> for more fine-grained control.
+In production, it makes more sense to have this separation for <em>display</em> and <em>pull</em> as well.</p><p>Create the SSH authorization policy. It should allow admins to SSH into all hosts,
+and non-admins to only SSH into hosts that they contributed code to.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;sshd_authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package sshd.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>import input.pull_responses
+</span><span style=color:#4e9a06>import input.sysinfo
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>import data.hosts
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># By default, users are not authorized.
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow access to any user that has the &#34;admin&#34; role.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    data.roles[&#34;admin&#34;][_] == input.sysinfo.pam_username
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow access to any user who contributed to the code running on the host.
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06># This rule gets the &#34;host_id&#34; value from the file &#34;/etc/host_identity.json&#34;.
+</span><span style=color:#4e9a06># It is available in the input under &#34;pull_responses&#34; because we
+</span><span style=color:#4e9a06># asked for it in our pull policy above.
+</span><span style=color:#4e9a06>#
+</span><span style=color:#4e9a06># It then compares all the contributors for that host against the username
+</span><span style=color:#4e9a06># that is asking for authorization.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    hosts[pull_responses.files[&#34;/etc/host_identity.json&#34;].host_id].contributors[_] == sysinfo.pam_username
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># If the user is not authorized, then include an error message in the response.
+</span><span style=color:#4e9a06>errors[&#34;Request denied by administrative policy&#34;] {
+</span><span style=color:#4e9a06>    not allow
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Load this policy into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @sshd_authz.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/sshd/authz</code></pre></div><p>Create the <code>sudo</code> authorization policy. It should allow only admins to use <code>sudo</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;sudo_authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package sudo.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># By default, users are not authorized.
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow access to any user that has the &#34;admin&#34; role.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    data.roles[&#34;admin&#34;][_] == input.sysinfo.pam_username
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># If the user is not authorized, then include an error message in the response.
+</span><span style=color:#4e9a06>errors[&#34;Request denied by administrative policy&#34;] {
+</span><span style=color:#4e9a06>    not allow
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Load this policy into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @sudo_authz.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/sudo/authz</code></pre></div><p>Finally, load the data that represents our roles and contributors into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT localhost:8181/v1/data/roles -d <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span><span style=color:#4e9a06>&#39;{
+</span><span style=color:#4e9a06>    &#34;admin&#34;: [&#34;ops&#34;]
+</span><span style=color:#4e9a06>}&#39;</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT localhost:8181/v1/data/hosts -d <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span><span style=color:#4e9a06>&#39;{
+</span><span style=color:#4e9a06>  &#34;frontend&#34;: {
+</span><span style=color:#4e9a06>    &#34;contributors&#34;: [
+</span><span style=color:#4e9a06>      &#34;frontend-dev&#34;
+</span><span style=color:#4e9a06>    ]
+</span><span style=color:#4e9a06>  },
+</span><span style=color:#4e9a06>  &#34;backend&#34;: {
+</span><span style=color:#4e9a06>    &#34;contributors&#34;: [
+</span><span style=color:#4e9a06>      &#34;backend-dev&#34;
+</span><span style=color:#4e9a06>    ]
+</span><span style=color:#4e9a06>  }
+</span><span style=color:#4e9a06>}&#39;</span></code></pre></div><h3 id=3-ssh-and-sudo-as-a-user-with-the-admin-role>3. SSH and sudo as a user with the <code>admin</code> role.</h3><p>First, let&rsquo;s try to access the hosts as the <code>ops</code> user. Recall, the <code>ops</code> user
+has been granted the <code>admin</code> role (via the <code>PUT /data/roles</code> request above) and
+users with the <code>admin</code> role can login to any host and perform sudo commands.</p><p>Login to the <code>frontend</code> host (which has SSH listening on port 2222) and run a command with sudo as the <code>ops</code> user.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>ssh -p <span style=color:#0000cf;font-weight:700>2222</span> ops@localhost <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  -o <span style=color:#000>StrictHostKeyChecking</span><span style=color:#ce5c00;font-weight:700>=</span>no -o <span style=color:#000>UserKnownHostsFile</span><span style=color:#ce5c00;font-weight:700>=</span>/dev/null
+
+sudo ls /
+exit</code></pre></div><p>You will see a lot of verbose logs from <code>sudo</code> as the PAM module goes through the motions.
+This is intended so you can study how the PAM module works.
+You can disable verbose logging by changing the <code>log_level</code> argument in the PAM
+configuration. For more details see
+<a href=https://github.com/open-policy-agent/contrib/tree/master/pam_authz/pam#configuration>this documentation</a>.</p><h3 id=4-ssh-as-a-user-without-the-admin-role>4. SSH as a user without the <code>admin</code> role.</h3><p>Let&rsquo;s try a user without the admin role. Recall, that a non-admin user can SSH
+into any host that they have <em>contributed to</em>.</p><p>The <code>frontend-dev</code> user contributed code to the <code>frontend</code> host so they should be
+able to login.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>ssh -p <span style=color:#0000cf;font-weight:700>2222</span> frontend-dev@localhost <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  -o <span style=color:#000>StrictHostKeyChecking</span><span style=color:#ce5c00;font-weight:700>=</span>no -o <span style=color:#000>UserKnownHostsFile</span><span style=color:#ce5c00;font-weight:700>=</span>/dev/null</code></pre></div><p>Only admins can use <code>sudo</code>, so you shouldn&rsquo;t be able to run <code>sudo ls /</code>.</p><p>Since <code>frontend-dev</code> did not contribute to the code running on the
+<code>backend</code> host (which has SSH listening on port 2223), they should not be able
+to login.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>ssh -p <span style=color:#0000cf;font-weight:700>2223</span> frontend-dev@localhost <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  -o <span style=color:#000>StrictHostKeyChecking</span><span style=color:#ce5c00;font-weight:700>=</span>no -o <span style=color:#000>UserKnownHostsFile</span><span style=color:#ce5c00;font-weight:700>=</span>/dev/null</code></pre></div><h3 id=5-elevate-a-user-s-rights-through-policy>5. Elevate a user&rsquo;s rights through policy.</h3><p>Suppose you have a ticketing system for elevation, where you generate tickets for users
+that need elevated rights, send the ticket to the user, and expire those tickets when
+their rights should be removed.</p><p>Let&rsquo;s mock the current state of this simple ticketing system&rsquo;s API with some data.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT localhost:8181/v1/data/elevate -d <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span><span style=color:#4e9a06>&#39;{
+</span><span style=color:#4e9a06>  &#34;tickets&#34;: {
+</span><span style=color:#4e9a06>    &#34;frontend-dev&#34;: &#34;1234&#34;
+</span><span style=color:#4e9a06>  }
+</span><span style=color:#4e9a06>}&#39;</span></code></pre></div><p>This means that for now, if the <code>frontend-dev</code> user can provide ticket number <code>1234</code>,
+they should be able to SSH into all servers.</p><p>Let&rsquo;s write policy to ensure that this happens.</p><p>First, we need to make the PAM module take input from the user.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;display.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package display
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># What should be prompted to the user?
+</span><span style=color:#4e9a06>display_spec = [
+</span><span style=color:#4e9a06>  {
+</span><span style=color:#4e9a06>    &#34;message&#34;: &#34;Please enter an elevation ticket if you have one:&#34;,
+</span><span style=color:#4e9a06>    &#34;style&#34;: &#34;prompt_echo_on&#34;,
+</span><span style=color:#4e9a06>    &#34;key&#34;: &#34;ticket&#34;
+</span><span style=color:#4e9a06>  }
+</span><span style=color:#4e9a06>]
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Load this policy into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @display.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/display</code></pre></div><p>Then we need to make sure that the authorization takes this input into account.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;sudo_authz_elevated.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06># A package can be defined across multiple files.
+</span><span style=color:#4e9a06>package sudo.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>import data.elevate
+</span><span style=color:#4e9a06>import input.sysinfo
+</span><span style=color:#4e9a06>import input.display_responses
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow this user if the elevation ticket they provided matches our mock API
+</span><span style=color:#4e9a06># of an internal elevation system.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  elevate.tickets[sysinfo.pam_username] == display_responses.ticket
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Load this policy into OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @sudo_authz_elevated.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/sudo_authz_elevated</code></pre></div><p>Confirm that the user <code>frontend-dev</code> can indeed use <code>sudo</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>ssh -p <span style=color:#0000cf;font-weight:700>2222</span> frontend-dev@localhost <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  -o <span style=color:#000>StrictHostKeyChecking</span><span style=color:#ce5c00;font-weight:700>=</span>no -o <span style=color:#000>UserKnownHostsFile</span><span style=color:#ce5c00;font-weight:700>=</span>/dev/null
+
+sudo ls /</code></pre></div><p>You should be prompted with the message that we defined in our <em>display</em> policy
+for both the SSH and <code>sudo</code> authorization cycles.
+This happens because the <em>display</em> policy is shared by the PAM configurations of SSH and <code>sudo</code>.
+In production, it is more practical to use separate policy packages for each PAM configuration.</p><p>We have not defined the SSH <em>authz</em> policy to work with elevation, so you can enter any value
+into the prompt that comes up for for SSH.</p><p>For <code>sudo</code>, enter the ticket number <code>1234</code> to get access.</p><p>Lastly, update the mocked elevation API and confirm the user&rsquo;s original rights are restored.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT localhost:8181/v1/data/elevate -d <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span><span style=color:#4e9a06>&#39;{
+</span><span style=color:#4e9a06>  &#34;tickets&#34;: {}
+</span><span style=color:#4e9a06>}&#39;</span></code></pre></div><p>You will find that running <code>sudo ls /</code> as the <code>frontend-dev</code> user is disallowed again.</p><p>It is possible to configure the <em>display</em> policy to only make the PAM module prompt for the
+elevation ticket when our mock API has a non-empty <code>tickets</code> object. So when there are no
+elevated users, there will be no prompt for a ticket. This can be done using the Rego
+<a href=http://www.openpolicyagent.org/docs/language-reference.html#aggregates><code>count</code> aggregate</a>.</p><h2 id=wrap-up>Wrap Up</h2><p>Congratulations for finishing the tutorial!</p><p>You learned a number of things about SSH with OPA:</p><ul><li>OPA gives you fine-grained access control over SSH, <code>sudo</code>, and any other application that uses PAM.
+Although this tutorial used the some of the same policies for both
+SSH and sudo, you should use separate, fine-grained policies for each application that supports PAM.</li><li>Writing allow/deny policies to control who has access to what using context from the user and host.</li><li>Importing external data into OPA and writing policies that depend on that data.</li></ul><p>The code for the PAM module used in this tutorial can be found in the
+<a href=https://github.com/open-policy-agent/contrib>open-policy-agent/contrib</a>
+repository.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

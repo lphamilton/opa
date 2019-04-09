@@ -1,0 +1,157 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="Docker Authorization"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/docker-authorization/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/docker-authorization/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Docker Authorization</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#goals>Goals</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#steps>Steps</a><ul><li><a href=#1-create-an-empty-policy-definition-that-will-allow-all-requests>1. Create an empty policy definition that will allow all requests.</a></li><li><a href=#2-install-the-opa-docker-authz-plugin>2. Install the opa-docker-authz plugin.</a></li><li><a href=#4-run-a-simple-docker-command-to-make-sure-everything-is-still-working>4. Run a simple Docker command to make sure everything is still working.</a></li><li><a href=#5-test-that-the-policy-definition-is-working>5. Test that the policy definition is working.</a></li><li><a href=#6-update-the-policy-to-reject-requests-with-the-unconfined-seccomp-https-en-wikipedia-org-wiki-seccomp-profile>6. Update the policy to reject requests with the unconfined <a href=https://en.wikipedia.org/wiki/Seccomp>seccomp</a> profile:</a></li><li><a href=#7-test-the-policy-is-working-by-running-a-simple-container>7. Test the policy is working by running a simple container:</a></li><li><a href=#a-name-identify-user-a-8-identify-the-user-in-docker-requests><a name=identify-user></a>8. Identify the user in Docker requests.</a></li><li><a href=#9-update-the-policy-to-include-basic-user-access-controls>9. Update the policy to include basic user access controls.</a></li><li><a href=#10-attempt-to-run-a-container>10. Attempt to run a container.</a></li><li><a href=#11-change-the-user-to-alice-and-re-run-the-container>11. Change the user to &ldquo;alice&rdquo; and re-run the container.</a></li></ul></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Docker Authorization</p></div></section><section class=section><div class=content><p>Docker’s out-of-the-box authorization model is all or nothing. But many users
+require finer-grained access control and Docker’s plugin infrastructure allows
+us to do so.</p><p>This is an excellent opportunity to see how to policy enable an existing
+service.</p><h2 id=goals>Goals</h2><p>This tutorial helps you get started with OPA and introduces you to core concepts
+in OPA.</p><blockquote><p>Policy enabling an application decouples the policy implementation from the
+business logic so that administrators can define policy without changing the
+application while still keeping up with the size, complexity, and dynamic
+nature of modern applications.</p></blockquote><p>For the purpose of this tutorial, we want to use OPA to enforce a policy that
+prevents users from running insecure containers.</p><p>This tutorial illustrates two key concepts:</p><ol><li><p>OPA policy definition is decoupled from the implementation of the service
+(in this case Docker). The administrator is empowered to define and manage
+policies without requiring changes to any of the apps.</p></li><li><p>Both the data relevant to policy and the policy definitions themselves can
+change rapidly.</p></li></ol><h2 id=prerequisites>Prerequisites</h2><p>This tutorial requires:</p><ul><li>Docker Engine 18.06.0-ce or newer</li><li>Docker API version 1.38 or newer</li><li><code>root</code> or <code>sudo</code> access</li></ul><p>The tutorial has been tested on the following platforms:</p><ul><li>Ubuntu 18.04 (64-bit)</li></ul><p>If you are using a different distro, OS, or architecture, the steps will be the
+same. However, there may be slight differences in the commands you need to run.</p><h2 id=steps>Steps</h2><p>Several of the steps below require <code>root</code> or <code>sudo</code> access. When you are
+modifying files under <code>/etc/docker</code> or signalling the Docker daemon to
+restart, you will need root access.</p><h3 id=1-create-an-empty-policy-definition-that-will-allow-all-requests>1. Create an empty policy definition that will allow all requests.</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>mkdir -p /etc/docker/policies
+cat &gt;/etc/docker/policies/authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package docker.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>allow = true
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>This policy defines a single rule named <code>allow</code> that always produces the
+decision <code>true</code>. Once all of the components are running, we will come back to
+the policy.</p><h3 id=2-install-the-opa-docker-authz-plugin>2. Install the opa-docker-authz plugin.</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker plugin install openpolicyagent/opa-docker-authz-v2:0.4 opa-args<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;-policy-file /opa/policies/authz.rego&#34;</span></code></pre></div><p>You need to configure the Docker daemon to use the plugin for authorization.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt; /etc/docker/daemon.json <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>{
+</span><span style=color:#4e9a06>    &#34;authorization-plugins&#34;: [&#34;openpolicyagent/opa-docker-authz-v2:0.4&#34;]
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Signal the Docker daemon to reload the configuration file.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#204a87>kill</span> -HUP <span style=color:#204a87;font-weight:700>$(</span>pidof dockerd<span style=color:#204a87;font-weight:700>)</span></code></pre></div><h3 id=4-run-a-simple-docker-command-to-make-sure-everything-is-still-working>4. Run a simple Docker command to make sure everything is still working.</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker ps</code></pre></div><p>If everything is setup correctly, the command should exit successfully. You can
+expect to see log messages from OPA and the plugin.</p><h3 id=5-test-that-the-policy-definition-is-working>5. Test that the policy definition is working.</h3><p>Let’s modify our policy to <strong>deny</strong> all requests:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;/etc/docker/policies/authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package docker.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>allow = false
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>In OPA, rules defines the content of documents. Documents be boolean values
+(true/false) or they can represent more complex structures using arrays,
+objects, strings, etc.</p><p>In the example above we modified the policy to always return <code>false</code> so that
+requests will be rejected.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker ps</code></pre></div><p>The output should be:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>Error response from daemon: authorization denied by plugin opa-docker-authz: request rejected by administrative policy</code></pre></div><p>To learn more about how rules define the content of documents, see: <a href=../how-does-opa-work>How Does OPA Work?</a></p><p>With this policy in place, users will not be able to run any Docker commands. Go
+ahead and try other commands such as <code>docker run</code> or <code>docker pull</code>. They will
+all be rejected.</p><p>Now let&rsquo;s change the policy so that it&rsquo;s a bit more useful.</p><h3 id=6-update-the-policy-to-reject-requests-with-the-unconfined-seccomp-https-en-wikipedia-org-wiki-seccomp-profile>6. Update the policy to reject requests with the unconfined <a href=https://en.wikipedia.org/wiki/Seccomp>seccomp</a> profile:</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;/etc/docker/policies/authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package docker.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    not deny
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>deny {
+</span><span style=color:#4e9a06>    seccomp_unconfined
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>seccomp_unconfined {
+</span><span style=color:#4e9a06>    # This expression asserts that the string on the right-hand side is equal
+</span><span style=color:#4e9a06>    # to an element in the array SecurityOpt referenced on the left-hand side.
+</span><span style=color:#4e9a06>    input.Body.HostConfig.SecurityOpt[_] == &#34;seccomp:unconfined&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><h3 id=7-test-the-policy-is-working-by-running-a-simple-container>7. Test the policy is working by running a simple container:</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker run hello-world</code></pre></div><p>Now try running the same container but disable seccomp (which should be
+prevented by the policy):</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker run --security-opt seccomp:unconfined hello-world</code></pre></div><p>Congratulations! You have successfully prevented containers from running without
+seccomp!</p><p>The rest of the tutorial shows how you can grant fine grained access to specific
+clients.</p><h3 id=a-name-identify-user-a-8-identify-the-user-in-docker-requests><a name=identify-user></a>8. Identify the user in Docker requests.</h3><blockquote><p>Back up your existing Docker configuration, just in case. You can replace your
+original configuration after you are done with the tutorial.</p></blockquote><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>mkdir -p ~/.docker
+cp ~/.docker/config.json ~/.docker/config.json~</code></pre></div><p>To identify the user, include an HTTP header in all of the requests sent to the
+Docker daemon:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;~/.docker/config.json <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>{
+</span><span style=color:#4e9a06>    &#34;HttpHeaders&#34;: {
+</span><span style=color:#4e9a06>        &#34;Authz-User&#34;: &#34;bob&#34;
+</span><span style=color:#4e9a06>    }
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><blockquote><p>Docker does not currently provide a way to authenticate clients. But in Docker
+1.12, clients can be authenticated using TLS and there are plans to include
+other means of authentication. For the purpose of this tutorial, we assume that
+an authentication system is place.</p></blockquote><h3 id=9-update-the-policy-to-include-basic-user-access-controls>9. Update the policy to include basic user access controls.</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;/etc/docker/policies/authz.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package docker.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># allow if the user is granted read/write access.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    user_id := input.Headers[&#34;Authz-User&#34;]
+</span><span style=color:#4e9a06>    user := users[user_id]
+</span><span style=color:#4e9a06>    not user.readOnly
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># allow if the user is granted read-only access and the request is a GET.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>    user_id := input.Headers[&#34;Authz-User&#34;]
+</span><span style=color:#4e9a06>    users[user_id].readOnly
+</span><span style=color:#4e9a06>    input.Method == &#34;GET&#34;
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># users defines permissions for the user. In this case, we define a single
+</span><span style=color:#4e9a06># attribute &#39;readOnly&#39; that controls the kinds of commands the user can run.
+</span><span style=color:#4e9a06>users = {
+</span><span style=color:#4e9a06>    &#34;bob&#34;: {&#34;readOnly&#34;: true},
+</span><span style=color:#4e9a06>    &#34;alice&#34;: {&#34;readOnly&#34;: false},
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><h3 id=10-attempt-to-run-a-container>10. Attempt to run a container.</h3><p>Because the configured user is <code>&quot;bob&quot;</code>, the request is rejected:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker run hello-world</code></pre></div><h3 id=11-change-the-user-to-alice-and-re-run-the-container>11. Change the user to &ldquo;alice&rdquo; and re-run the container.</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt; ~/.docker/config.json <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>{
+</span><span style=color:#4e9a06>    &#34;HttpHeaders&#34;: {
+</span><span style=color:#4e9a06>        &#34;Authz-User&#34;: &#34;alice&#34;
+</span><span style=color:#4e9a06>    }
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Because the configured user is <code>&quot;alice&quot;</code>, the request will succeed:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker run hello-world</code></pre></div><p>That&rsquo;s it!</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

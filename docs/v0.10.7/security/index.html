@@ -1,0 +1,281 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content=Security><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/security/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/security/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Security</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/security/>Security</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#tls-and-https>TLS and HTTPS</a><ul><li><a href=#1-generate-the-tls-credentials-for-opa-example>1. Generate the TLS credentials for OPA (Example)</a></li><li><a href=#2-start-opa-with-tls-enabled>2. Start OPA with TLS enabled</a></li><li><a href=#3-try-to-access-the-api-with-http>3. Try to access the API with HTTP</a></li><li><a href=#4-access-the-api-with-https>4. Access the API with HTTPS</a></li></ul></li><li><a href=#authentication-and-authorization>Authentication and Authorization</a><ul><li><a href=#token-based-authentication-example>Token-based Authentication Example</a></li><li><a href=#tls-based-authentication-example>TLS-based Authentication Example</a></li></ul></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Security</p></div></section><section class=section><div class=content><p>This document provides guidelines for deploying OPA inside untrusted
+environments. You should read this document if you are deploying OPA as a
+service.</p><p>Securing the API involves configuring OPA to use TLS, authentication, and
+authorization so that:</p><ul><li>Traffic between OPA and clients is encrypted.</li><li>Clients verify the OPA API endpoint identity.</li><li>OPA verifies client identities.</li><li>Clients are only granted access to specific APIs or sections of <a href=../how-does-opa-work#the-data-document>The <code>data</code> Document</a>.</li></ul><h2 id=tls-and-https>TLS and HTTPS</h2><p>HTTPS is configured by specifying TLS credentials via command line flags at
+startup:</p><ul><li><code>--tls-cert-file=&lt;path&gt;</code> specifies the path of the file containing the TLS certificate.</li><li><code>--tls-private-key-file=&lt;path&gt;</code> specifies the path of the file containing the TLS private key.</li></ul><p>OPA will exit immediately with a non-zero status code if only one of these flags
+is specified.</p><p>Note that for using TLS-based authentication, a CA cert file can be provided:</p><ul><li><code>--tls-ca-cert-file=&lt;path&gt;</code> specifies the path of the file containing the CA cert.</li></ul><p>If provided, it will be used to validate clients&rsquo; TLS certificates when using TLS
+authentication (see below).</p><p>By default, OPA ignores insecure HTTP connections when TLS is enabled. To allow
+insecure HTTP connections in addition to HTTPS connections, provide another
+listening address with <code>--addr</code>. For example:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>opa run --server <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  --log-level debug <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  --tls-cert-file public.crt <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  --tls-private-key-file private.key <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  --addr https://0.0.0.0:8181 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  --addr http://localhost:8282</code></pre></div><h3 id=1-generate-the-tls-credentials-for-opa-example>1. Generate the TLS credentials for OPA (Example)</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>openssl genrsa -out private.key <span style=color:#0000cf;font-weight:700>2048</span>
+openssl req -new -x509 -sha256 -key private.key -out public.crt -days <span style=color:#0000cf;font-weight:700>1</span></code></pre></div><blockquote><p>We have generated a self-signed certificate for example purposes here. DO NOT
+rely on self-signed certificates outside of development without understanding
+the risks.</p></blockquote><h3 id=2-start-opa-with-tls-enabled>2. Start OPA with TLS enabled</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>opa run --server --log-level debug <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    --tls-cert-file public.crt <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    --tls-private-key-file private.key</code></pre></div><h3 id=3-try-to-access-the-api-with-http>3. Try to access the API with HTTP</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>curl http://localhost:8181/v1/data</code></pre></div><h3 id=4-access-the-api-with-https>4. Access the API with HTTPS</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>curl -k https://localhost:8181/v1/data</code></pre></div><blockquote><p>We have to use cURL&rsquo;s <code>-k/--insecure</code> flag because we are using a
+self-signed certificate.</p></blockquote><h2 id=authentication-and-authorization>Authentication and Authorization</h2><p>This section shows how to configure OPA to authenticate and authorize client
+requests. Client-side authentication of the OPA API endpoint should be handled
+with TLS.</p><p>Authentication and authorization allow OPA to:</p><ul><li>Verify client identities.</li><li>Control client access to APIs and data.</li></ul><p>Both are configured via command line flags:</p><ul><li><code>--authentication=&lt;scheme&gt;</code> specifies the authentication scheme to use.</li><li><code>--authorization=&lt;scheme&gt;</code> specifies the authorization scheme to use.</li></ul><p>By default, OPA does not perform authentication or authorization and these flags
+default to <code>off</code>.</p><p>For authentication, OPA supports:</p><ul><li><a href=../rest-api#bearer-tokens>Bearer tokens</a>: Bearer tokens are enabled by
+starting OPA with <code>--authentication=token</code>. When the <code>token</code> authentication
+mode is enabled, OPA will extract the Bearer token from incoming API requests
+and provide to the authorization handler. When you use the <code>token</code>
+authentication, you must configure an authorization policy that checks the
+tokens. If the client does not supply a Bearer token, the <code>input.identity</code>
+value will be undefined when the authorization policy is evaluated.</li><li>Client TLS certificates: Client TLS authentication is enabled by starting
+OPA with <code>--authentication=tls</code>. When this authentication mode is enabled,
+OPA will require all clients to provide a client certificate. It is verified
+against the CA certificate(s) provided via <code>--tls-ca-cert-path</code>. Upon successful
+verification, the <code>input.identity</code> value is set to the TLS certificate&rsquo;s
+subject.</li></ul><p>Note that TLS authentication does not disable non-HTTPS listeners. To ensure
+that all your communication is secured, it should be paired with an
+authorization policy (see below) that at least requires the client identity
+(<code>input.identity</code>) to <em>be set</em>.</p><p>For authorization, OPA relies on policy written in Rego. Authorization is
+enabled by starting OPA with <code>--authorization=basic</code>.</p><p>When the <code>basic</code> authorization scheme is enabled, a minimal authorization policy
+must be provided on startup. The authorization policy must be structured as follows:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#8f5902;font-style:italic># The &#34;system&#34; namespace is reserved for internal use</span>
+<span style=color:#8f5902;font-style:italic># by OPA. Authorization policy must be defined under</span>
+<span style=color:#8f5902;font-style:italic># system.authz as follows:</span>
+<span style=color:#000>package</span> <span style=color:#204a87>system</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>  <span style=color:#8f5902;font-style:italic># Reject requests by default.</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#8f5902;font-style:italic># Logic to authorize request goes here.</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>When OPA receives a request, it executes a query against the document defined
+<code>data.system.authz.allow</code>. The implementation of the policy may span multiple
+packages however it is recommended that administrators keep the policy under the
+<code>system</code> namespace.</p><p>If the document produced by the <code>allow</code> rule is <code>true</code>, the request is
+processed normally. If the document is undefined or <strong>not</strong> <code>true</code>, the
+request is rejected immediately.</p><p>OPA provides the following input document when executing the authorization
+policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#8f5902;font-style:italic># Identity established by authentication scheme.</span>
+        <span style=color:#8f5902;font-style:italic># When Bearer tokens are used, the identity is</span>
+        <span style=color:#8f5902;font-style:italic># set to the Bearer token value.</span>
+        <span style=color:#4e9a06>&#34;identity&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>&lt;</span><span style=color:#204a87>String</span><span style=color:#ce5c00;font-weight:700>&gt;</span><span style=color:#000;font-weight:700>,</span>
+
+        <span style=color:#8f5902;font-style:italic># One of {GET, POST, PUT, PATCH, DELETE}.</span>
+        <span style=color:#4e9a06>&#34;method&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>&lt;</span><span style=color:#000>HTTP</span> <span style=color:#000>Method</span><span style=color:#ce5c00;font-weight:700>&gt;</span><span style=color:#000;font-weight:700>,</span>
+
+        <span style=color:#8f5902;font-style:italic># URL path represented as an array.</span>
+        <span style=color:#8f5902;font-style:italic># For example: /v1/data/exempli-gratia</span>
+        <span style=color:#8f5902;font-style:italic># is represented as [v1, data, exampli-gratia]</span>
+        <span style=color:#4e9a06>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>&lt;</span><span style=color:#000>HTTP</span> <span style=color:#000>URL</span> <span style=color:#000>Path</span><span style=color:#ce5c00;font-weight:700>&gt;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>At a minimum, the authorization policy should grant access to a special root
+identity:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>           <span style=color:#8f5902;font-style:italic># Reject requests by default.</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>                         <span style=color:#8f5902;font-style:italic># Allow request if...</span>
+    <span style=color:#4e9a06>&#34;secret&#34;</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>identity</span>  <span style=color:#8f5902;font-style:italic># Identity is the secret root key.</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>When OPA is configured with this minimal authorization policy, requests without
+authentication are rejected:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/policies</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><p>Response:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>401</span> <span style=color:#c00;font-weight:700>Unauthorized</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;code&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;unauthorized&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;message&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;request rejected by administrative policy&#34;</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>However, if Bearer token authentication is enabled and the request includes the
+secret from above, the request is allowed:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/policies</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Authorization</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>Bearer secret</span></code></pre></div><p>Response:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><h3 id=token-based-authentication-example>Token-based Authentication Example</h3><p>When Bearer tokens are used for authentication, the policy should at minimum
+validate the identity:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#8f5902;font-style:italic># Tokens may defined in policy or pushed into OPA as data.</span>
+<span style=color:#000>tokens</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-foo&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;admin&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-bar&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;service-1&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-baz&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;service-2&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;service-3&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>           <span style=color:#8f5902;font-style:italic># Reject requests by default.</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>                         <span style=color:#8f5902;font-style:italic># Allow request if...</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>identity</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;secret&#34;</span>  <span style=color:#8f5902;font-style:italic># Identity is the secret root key.</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>                        <span style=color:#8f5902;font-style:italic># Allow request if...</span>
+    <span style=color:#000>tokens</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>identity</span><span style=color:#ce5c00;font-weight:700>]</span>     <span style=color:#8f5902;font-style:italic># Identity exists in &#34;tokens&#34;.</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>To complete this example, the policy could further restrict tokens to specific
+documents:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#8f5902;font-style:italic># Rights may be defined in policy or pushed into OPA as data.</span>
+<span style=color:#000>rights</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;admin&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;*&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;service-1&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;v1&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;data&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;exempli&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;gratia&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;service-2&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;v1&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;data&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;par&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;example&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Tokens may be defined in policy or pushed into OPA as data.</span>
+<span style=color:#000>tokens</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-foo&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;admin&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-bar&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;service-1&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;my-secret-token-baz&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;roles&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;service-2&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;service-3&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>               <span style=color:#8f5902;font-style:italic># Reject requests by default.</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>                             <span style=color:#8f5902;font-style:italic># Allow request if...</span>
+    <span style=color:#000>identity_rights</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>right</span><span style=color:#ce5c00;font-weight:700>]</span>          <span style=color:#8f5902;font-style:italic># Rights for identity exist, and...</span>
+    <span style=color:#000>right</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>path</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;*&#34;</span>               <span style=color:#8f5902;font-style:italic># Right.path is &#39;*&#39;.</span>
+<span style=color:#000;font-weight:700>}</span> <span style=color:#000;font-weight:700>{</span>                                 <span style=color:#8f5902;font-style:italic># Or...</span>
+    <span style=color:#000>identity_rights</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>right</span><span style=color:#ce5c00;font-weight:700>]</span>          <span style=color:#8f5902;font-style:italic># Rights for identity exist, and...</span>
+    <span style=color:#000>right</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>path</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>path</span>        <span style=color:#8f5902;font-style:italic># Right.path matches input.path.</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>identity_rights</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>right</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#000;font-weight:700>{</span>             <span style=color:#8f5902;font-style:italic># Right is in the identity_rights set if...</span>
+    <span style=color:#000>token</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>tokens</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>identity</span><span style=color:#ce5c00;font-weight:700>]</span>  <span style=color:#8f5902;font-style:italic># Token exists for identity, and...</span>
+    <span style=color:#000>role</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>token</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>roles</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>           <span style=color:#8f5902;font-style:italic># Token has a role, and...</span>
+    <span style=color:#000>right</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>rights</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>role</span><span style=color:#ce5c00;font-weight:700>]</span>            <span style=color:#8f5902;font-style:italic># Role has rights defined.</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=tls-based-authentication-example>TLS-based Authentication Example</h3><p>To set up authentication based on TLS, we will need three certificates:</p><ol><li>the CA cert (self-signed),</li><li>the server cert (signed by the CA), and</li><li>the client cert (signed by the CA).</li></ol><p>These are example invocations using <code>openssl</code>.
+Don&rsquo;t use these in production, the key sizes are only good for demonstration purposes.</p><p>Note that we&rsquo;re creating an extra client, which has a certificate signed by the proper
+CA, but will later be used to illustrate the authorization policy.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#8f5902;font-style:italic># CA</span>
+openssl genrsa -out ca-key.pem <span style=color:#0000cf;font-weight:700>2048</span>
+openssl req -x509 -new -nodes -key ca-key.pem -days <span style=color:#0000cf;font-weight:700>1000</span> -out ca.pem -subj <span style=color:#4e9a06>&#34;/CN=my-ca&#34;</span>
+
+<span style=color:#8f5902;font-style:italic># client 1</span>
+openssl genrsa -out client-key.pem <span style=color:#0000cf;font-weight:700>2048</span>
+openssl req -new -key client-key.pem -out csr.pem -subj <span style=color:#4e9a06>&#34;/CN=my-client&#34;</span>
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -days <span style=color:#0000cf;font-weight:700>1000</span>
+
+<span style=color:#8f5902;font-style:italic># client 2</span>
+openssl genrsa -out client-key-2.pem <span style=color:#0000cf;font-weight:700>2048</span>
+openssl req -new -key client-key-2.pem -out csr.pem -subj <span style=color:#4e9a06>&#34;/CN=my-client-2&#34;</span>
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert-2.pem -days <span style=color:#0000cf;font-weight:700>1000</span>
+
+<span style=color:#8f5902;font-style:italic># create server cert with IP and DNS SANs</span>
+cat <span style=color:#4e9a06>&lt;&lt;EOF &gt;req.cnf
+</span><span style=color:#4e9a06>[req]
+</span><span style=color:#4e9a06>req_extensions = v3_req
+</span><span style=color:#4e9a06>distinguished_name = req_distinguished_name
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>[req_distinguished_name]
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>[v3_req]
+</span><span style=color:#4e9a06>basicConstraints = CA:FALSE
+</span><span style=color:#4e9a06>keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+</span><span style=color:#4e9a06>subjectAltName = @alt_names
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>[alt_names]
+</span><span style=color:#4e9a06>DNS.1 = opa.example.com
+</span><span style=color:#4e9a06>IP.1 = 127.0.0.1
+</span><span style=color:#4e9a06>EOF</span>
+openssl genrsa -out server-key.pem <span style=color:#0000cf;font-weight:700>2048</span>
+openssl req -new -key server-key.pem -out csr.pem -subj <span style=color:#4e9a06>&#34;/CN=my-server&#34;</span> -config req.cnf
+openssl x509 -req -in csr.pem -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -days <span style=color:#0000cf;font-weight:700>1000</span> -extensions v3_req -extfile req.cnf</code></pre></div><p>We also create a simple authorization policy file, called <code>check.rego</code>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#8f5902;font-style:italic># client_cns may defined in policy or pushed into OPA as data.</span>
+<span style=color:#000>client_cns</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#4e9a06>&#34;my-client&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>                                        <span style=color:#8f5902;font-style:italic># Allow request if</span>
+	<span style=color:#204a87>split</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>identity</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;=&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;CN&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>cn</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>)</span> <span style=color:#8f5902;font-style:italic># the cert subject is a CN, and</span>
+	<span style=color:#000>client_cns</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>cn</span><span style=color:#ce5c00;font-weight:700>]</span>                         <span style=color:#8f5902;font-style:italic># the name is a known client.</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>Now, we&rsquo;re ready to starting the server with <code>-authentication=tls</code> and the
+certificate-related parameters:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console>$ opa run -s \
+  --tls-cert-file server-cert.pem \
+  --tls-private-key-file server-key.pem \
+  --tls-ca-cert-file ca.pem \
+  --authentication=tls \
+  --authorization=basic \
+  -a https://127.0.0.1:8181 \
+  check.rego
+INFO[2019-01-14T10:24:52+01:00] First line of log stream.                     addrs=&#34;[https://127.0.0.1:8181]&#34; insecure_addr=</code></pre></div><p>We can use <code>curl</code> to validate our TLS-based authentication setup:</p><p>First, we use the client certificate that was signed by the CA, and has a subject
+matching our authorization policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console>$ curl --key client-key.pem \
+  --cert client-cert.pem \
+  --cacert ca.pem \
+  --resolve opa.example.com:8181:127.0.0.1 \
+  https://opa.example.com:8181/v1/data
+{&#34;result&#34;:{}}</code></pre></div><p>Note that we&rsquo;re passing the CA cert to curl &ndash; this is done to have curl accept
+the server&rsquo;s certificate, which has been signed by our CA cert.</p><p>Since we&rsquo;ve setup an IP SAN, we may also <code>curl https://127.0.0.1:8181/v1/data</code>
+directly. (To keep our examples focused, we&rsquo;ll do that from here on.)</p><p>Using a valid certificate whose subject will be declined by our authorization
+policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console>$ curl --key client-key-2.pem \
+  --cert client-cert-2.pem \
+  --cacert ca.pem \
+  https://127.0.0.1:8181/v1/data
+{
+  &#34;code&#34;: &#34;unauthorized&#34;,
+  &#34;message&#34;: &#34;request rejected by administrative policy&#34;
+}</code></pre></div><p>Finally, we&rsquo;ll attempt to query without a client certificate:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console>$ curl --cacert ca.pem https://127.0.0.1:8181/v1/data
+curl: (35) error:14094412:SSL routines:ssl3_read_bytes:sslv3 alert bad certificate</code></pre></div><p>As you can see, TLS-based authentication disallows these request completely.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

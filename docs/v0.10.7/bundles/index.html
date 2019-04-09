@@ -1,0 +1,137 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content=Bundles><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/bundles/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/bundles/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Bundles</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/bundles/>Bundles</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#bundle-service-api>Bundle Service API</a></li><li><a href=#bundle-file-format>Bundle File Format</a></li><li><a href=#multiple-sources-of-policy-and-data>Multiple Sources of Policy and Data</a></li><li><a href=#debugging-your-bundles>Debugging Your Bundles</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Bundles</p></div></section><section class=section><div class=content><p>OPA can periodically download bundles of policy and data from remote HTTP
+servers. The policies and data are loaded on the fly without requiring a
+restart of OPA. Once the policies and data have been loaded, they are enforced
+immediately. Policies and data loaded from bundles are accessible via the
+standard OPA <a href=../rest-api>REST API</a>.</p><p>Bundles provide an alternative to pushing policies into OPA via the REST APIs.
+By configuring OPA to download bundles from a remote HTTP server, you can
+ensure that OPA has an up-to-date copy of policies and data required for
+enforcement at all times.</p><p>OPA can only be configured to download one bundle at a time. You
+cannot configure OPA to download multiple bundles. By default, the OPA
+REST APIs will prevent you from modifying policy and data loaded via
+bundles. If you need to load policy and data from multiple sources,
+see the section below.</p><p>See the <a href=../configuration>Configuration Reference</a> for configuration details.</p><h2 id=bundle-service-api>Bundle Service API</h2><p>OPA expects the service to expose an API endpoint that serves bundles. The
+bundle API should allow clients to download named bundles.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/&lt;bundle_prefix&gt;/&lt;name&gt;</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><p>If the bundle exists, the server should respond with an HTTP 200 OK status
+followed by a gzipped tarball in the message body.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/gzip</span></code></pre></div><p>Enable bundle downloading via configuration. For example:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>services<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>acmecorp<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>url<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>https<span style=color:#000;font-weight:700>:</span>//example.com/service/v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>credentials<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>bearer<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>token<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;bGFza2RqZmxha3NkamZsa2Fqc2Rsa2ZqYWtsc2RqZmtramRmYWxkc2tm&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>bundle<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>authz/bundle.tar.gz<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>prefix<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>somedir<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>service<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>acmecorp<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>polling<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>min_delay_seconds<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>10</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>max_delay_seconds<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>20</span></code></pre></div><p>Using this configuration, OPA will fetch bundles from
+<code>https://example.com/service/v1/somedir/authz/bundle.tar.gz</code>.</p><p>The URL is constructed as follows:</p><pre><code>https://example.com/service/v1/somedir/authz/bundle.tar.gz
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^ ^^^^^^^^^^^^^^^^^^^
+services[0].url                prefix  name
+</code></pre><p>If the <code>bundle.prefix</code> field is not defined, the value defaults to <code>bundles</code>.</p><p>See the following section for details on the bundle file format.</p><h2 id=bundle-file-format>Bundle File Format</h2><p>Bundle files are gzipped tarballs that contain policies and data. The data
+files in the bundle must be organized hierarchically into directories inside
+the tarball.</p><blockquote><p>The hierarchical organization indicates to OPA where to load the data files
+into the <a href=../how-does-opa-work#the-data-document>the <code>data</code> Document</a>.</p></blockquote><p>You can list the content of a bundle with <code>tar</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ tar tzf bundle.tar.gz
+.manifest
+roles
+roles/bindings
+roles/bindings/data.json
+roles/permissions
+roles/permissions/data.json
+http
+http/example
+http/example/authz
+http/example/authz/authz.rego</code></pre></div><p>In this example, the bundle contains one policy file (<code>authz.rego</code>) and two
+data files (<code>bindings/data.json</code> and <code>permissions/data.json</code>).</p><p>Bundle files may contain an optional <code>.manifest</code> file that stores bundle
+metadata. The file should contain a JSON serialized object.</p><ul><li><p>If the bundle service is capable of serving different revisions of the same
+bundle, the service should include a top-level <code>revision</code> field containing a
+<code>string</code> value that identifies the bundle revision.</p></li><li><p>If you expect to load additional data into OPA from outside the
+bundle (e.g., via OPA&rsquo;s HTTP API) you should include a top-level
+<code>roots</code> field containing of path prefixes that declare the scope of
+the bundle. See the section below on managing data from multiple
+sources. If the <code>roots</code> field is not included in the manifest it
+defaults to <code>[&quot;&quot;]</code> which means that ALL data and policy must come
+from the bundle.</p></li></ul><p>OPA will only load data files named <code>data.json</code>, i.e., you MUST name files
+that contain data (which you want loaded into OPA) <code>data.json</code> &ndash; otherwise
+they will be ignored.</p><h2 id=multiple-sources-of-policy-and-data>Multiple Sources of Policy and Data</h2><p>By default, when OPA is configured to download policy and data from a
+bundle service, the entire content of OPA&rsquo;s policy and data cache is
+defined by the bundle. However, if you need to load OPA with policy
+and data from multiple sources, you can implement your bundle service
+to generate bundles that are scoped to a subset of OPA&rsquo;s policy and
+data cache.</p><blockquote><p>We recommend that whenever possible, you implement policy and data
+aggregation centrally, however, in some cases that&rsquo;s not possible
+(e.g., due to latency requirements.)</p></blockquote><p>To scope bundles to a subset of OPA&rsquo;s policy and data cache, include
+a top-level <code>roots</code> key in the bundle that defines the roots of the
+<code>data</code> namespace that are owned by the bundle.</p><p>For example, the following manifest would declare two roots
+(<code>acmecorp/policy</code> and <code>acmecorp/oncall</code>):</p><pre><code>{
+    &quot;roots&quot;: [&quot;acmecorp/policy&quot;, &quot;acmecorp/oncall&quot;]
+}
+</code></pre><p>If OPA was loaded with a bundle containing this manifest it would only
+erase and overwrite policy and data under these roots. Policy and data
+loaded under other roots is left intact.</p><p>When OPA loads scoped bundles, it validates that:</p><ul><li><p>The roots are not overlapping (e.g., <code>a/b/c</code> and <code>a/b</code> are
+overlapped and will result in an error.)</p></li><li><p>The policies in the bundle are contained under the roots. This is
+determined by inspecting the <code>package</code> statement in each of the
+policy files. For example, given the manifest above, it would be an
+error to include a policy file containing <code>package acmecorp.other</code>
+because <code>acmecorp.other</code> is not contained in either of the roots.</p></li><li><p>The data in the bundle is contained under the roots.</p></li></ul><p>If bundle validation fails, OPA will report the validation error via
+the Status API.</p><h2 id=debugging-your-bundles>Debugging Your Bundles</h2><p>When you run OPA, you can provide bundle files over the command line. This
+allows you to manually check that your bundles include all of the files that
+you intended and that they are structured correctly. For example:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>opa run bundle.tar.gz</code></pre></div></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

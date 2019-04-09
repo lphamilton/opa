@@ -1,0 +1,1166 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="REST API"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/rest-api/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/rest-api/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | REST API</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/rest-api/>REST API</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#policy-api>Policy API</a><ul><li><a href=#list-policies>List Policies</a><ul><li><a href=#status-codes>Status Codes</a></li><li><a href=#example-request>Example Request</a></li><li><a href=#example-response>Example Response</a></li></ul></li><li><a href=#get-a-policy>Get a Policy</a><ul><li><a href=#query-parameters>Query Parameters</a></li><li><a href=#status-codes-1>Status Codes</a></li><li><a href=#example-request-1>Example Request</a></li><li><a href=#example-response-1>Example Response</a></li></ul></li><li><a href=#create-or-update-a-policy>Create or Update a Policy</a></li><li><a href=#query-parameters-1>Query Parameters</a><ul><li><a href=#status-codes-2>Status Codes</a></li><li><a href=#example-request-2>Example Request</a></li><li><a href=#example-response-2>Example Response</a></li></ul></li><li><a href=#delete-a-policy>Delete a Policy</a><ul><li><a href=#query-parameters-2>Query Parameters</a></li><li><a href=#status-codes-3>Status Codes</a></li><li><a href=#example-request-3>Example Request</a></li><li><a href=#example-response-3>Example Response</a></li></ul></li></ul></li><li><a href=#data-api>Data API</a><ul><li><a href=#get-a-document>Get a Document</a><ul><li><a href=#query-parameters-3>Query Parameters</a></li><li><a href=#status-codes-4>Status Codes</a></li><li><a href=#response-message>Response Message</a></li><li><a href=#example-request-4>Example Request</a></li><li><a href=#example-response-4>Example Response</a></li><li><a href=#example-watch-request>Example Watch Request</a></li><li><a href=#example-watch-response>Example Watch Response</a></li></ul></li><li><a href=#get-a-document-with-input>Get a Document (with Input)</a><ul><li><a href=#request-headers>Request Headers</a></li><li><a href=#query-parameters-4>Query Parameters</a></li><li><a href=#status-codes-5>Status Codes</a></li><li><a href=#response-message-1>Response Message</a></li><li><a href=#example-request-5>Example Request</a></li><li><a href=#example-response-5>Example Response</a></li><li><a href=#example-request-6>Example Request</a></li><li><a href=#example-response-6>Example Response</a></li></ul></li><li><a href=#get-a-document-webhook>Get a Document (Webhook)</a><ul><li><a href=#request-headers-1>Request Headers</a></li><li><a href=#query-parameters-5>Query Parameters</a></li><li><a href=#status-codes-6>Status Codes</a></li><li><a href=#example-request-7>Example Request</a></li><li><a href=#example-response-7>Example Response</a></li></ul></li><li><a href=#create-or-overwrite-a-document>Create or Overwrite a Document</a><ul><li><a href=#status-codes-7>Status Codes</a></li><li><a href=#example-request-to-initialize-document-with-if-none-match>Example Request To Initialize Document With If-None-Match</a></li><li><a href=#example-response-if-document-already-exists>Example Response If Document Already Exists</a></li><li><a href=#example-response-if-document-does-not-exist>Example Response If Document Does Not Exist</a></li></ul></li><li><a href=#patch-a-document>Patch a Document</a><ul><li><a href=#status-codes-8>Status Codes</a></li><li><a href=#example-request-8>Example Request</a></li><li><a href=#example-response-8>Example Response</a></li></ul></li><li><a href=#delete-a-document>Delete a Document</a><ul><li><a href=#status-codes-9>Status Codes</a></li><li><a href=#example-request-9>Example Request</a></li><li><a href=#example-response-9>Example Response</a></li></ul></li></ul></li><li><a href=#query-api>Query API</a><ul><li><a href=#execute-a-simple-query>Execute a Simple Query</a><ul><li><a href=#request-headers-2>Request Headers</a></li><li><a href=#query-parameters-6>Query Parameters</a></li><li><a href=#status-codes-10>Status Codes</a></li><li><a href=#example-request-10>Example Request</a></li><li><a href=#example-response-10>Example Response</a></li></ul></li><li><a href=#execute-an-ad-hoc-query>Execute an Ad-hoc Query</a><ul><li><a href=#query-parameters-7>Query Parameters</a></li><li><a href=#status-codes-11>Status Codes</a></li><li><a href=#example-request-11>Example Request</a></li><li><a href=#example-response-11>Example Response</a></li></ul></li></ul></li><li><a href=#compile-api>Compile API</a><ul><li><a href=#partially-evaluate-a-query>Partially Evaluate a Query</a><ul><li><a href=#request-body>Request Body</a></li><li><a href=#query-parameters-8>Query Parameters</a></li><li><a href=#status-codes-12>Status Codes</a></li><li><a href=#example-request-12>Example Request</a></li><li><a href=#example-response-12>Example Response</a></li><li><a href=#unconditional-results-from-partial-evaluation>Unconditional Results from Partial Evaluation</a></li></ul></li></ul></li><li><a href=#authentication>Authentication</a><ul><li><a href=#bearer-tokens>Bearer Tokens</a></li></ul></li><li><a href=#errors>Errors</a><ul><li><a href=#method-not-allowed>Method not Allowed</a></li></ul></li><li><a href=#explanations>Explanations</a><ul><li><a href=#trace-events>Trace Events</a><ul><li><a href=#query-ids>Query IDs</a></li><li><a href=#types-of-events>Types of Events</a></li><li><a href=#example-trace-event>Example Trace Event</a></li></ul></li></ul></li><li><a href=#performance-metrics>Performance Metrics</a></li><li><a href=#watches>Watches</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">REST API</p></div></section><section class=section><div class=content><p>This document is the authoritative specification of the OPA REST API.</p><h2 id=policy-api>Policy API</h2><p>The Policy API exposes CRUD endpoints for managing policy modules. Policy modules can be added, removed, and modified at any time.</p><p>The identifiers given to policy modules are only used for management purposes. They are not used outside of the Policy API.</p><h3 id=list-policies>List Policies</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/policies</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><p>List policy modules.</p><h4 id=status-codes>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>500</strong> - server error</li></ul><h4 id=example-request>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/policies</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><h4 id=example-response>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;example2&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;raw&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;package opa.examples\n\nimport data.servers\n\nviolations[server] {\n\tserver = servers[_]\n\tserver.protocols[_] = \&#34;http\&#34;\n\tpublic_servers[server]\n}\n&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ast&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;package&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+          <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;examples&#34;</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>},</span>
+        <span style=color:#204a87;font-weight:700>&#34;rules&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+          <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;head&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;violations&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;key&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+              <span style=color:#000;font-weight:700>}</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#204a87;font-weight:700>&#34;body&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;servers&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$0&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>},</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;protocols&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$1&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;http&#34;</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>},</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>2</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;examples&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;public_servers&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>}</span>
+            <span style=color:#000;font-weight:700>]</span>
+          <span style=color:#000;font-weight:700>}</span>
+        <span style=color:#000;font-weight:700>]</span>
+      <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;example1&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;raw&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;package opa.examples\n\nimport data.servers\nimport data.networks\nimport data.ports\n\npublic_servers[server] {\n\tserver = servers[_]\n\tserver.ports[_] = ports[k].id\n\tports[k].networks[_] = networks[m].id\n\tnetworks[m].public = true\n}\n&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ast&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;package&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+          <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;examples&#34;</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>},</span>
+        <span style=color:#204a87;font-weight:700>&#34;rules&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+          <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;head&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;public_servers&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;key&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+              <span style=color:#000;font-weight:700>}</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#204a87;font-weight:700>&#34;body&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;servers&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$0&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>},</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$1&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;k&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;id&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>},</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>2</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;k&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$2&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;m&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;id&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>},</span>
+              <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>3</span><span style=color:#000;font-weight:700>,</span>
+                <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;m&#34;</span>
+                      <span style=color:#000;font-weight:700>},</span>
+                      <span style=color:#000;font-weight:700>{</span>
+                        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;public&#34;</span>
+                      <span style=color:#000;font-weight:700>}</span>
+                    <span style=color:#000;font-weight:700>]</span>
+                  <span style=color:#000;font-weight:700>},</span>
+                  <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;boolean&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+                  <span style=color:#000;font-weight:700>}</span>
+                <span style=color:#000;font-weight:700>]</span>
+              <span style=color:#000;font-weight:700>}</span>
+            <span style=color:#000;font-weight:700>]</span>
+          <span style=color:#000;font-weight:700>}</span>
+        <span style=color:#000;font-weight:700>]</span>
+      <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=get-a-policy>Get a Policy</h3><pre><code>GET /v1/policies/&lt;id&gt;
+</code></pre><p>Get a policy module.</p><h4 id=query-parameters>Query Parameters</h4><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li></ul><h4 id=status-codes-1>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><h4 id=example-request-1>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/policies/example1</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><h4 id=example-response-1>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;example1&#34;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;raw&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;package opa.examples\n\nimport data.servers\nimport data.networks\nimport data.ports\n\npublic_servers[server] {\n\tserver = servers[_]\n\tserver.ports[_] = ports[k].id\n\tports[k].networks[_] = networks[m].id\n\tnetworks[m].public = true\n}\n&#34;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;ast&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;package&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+          <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+            <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+          <span style=color:#000;font-weight:700>},</span>
+          <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+            <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span>
+          <span style=color:#000;font-weight:700>},</span>
+          <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+            <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;examples&#34;</span>
+          <span style=color:#000;font-weight:700>}</span>
+        <span style=color:#000;font-weight:700>]</span>
+      <span style=color:#000;font-weight:700>},</span>
+      <span style=color:#204a87;font-weight:700>&#34;rules&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#000;font-weight:700>{</span>
+          <span style=color:#204a87;font-weight:700>&#34;head&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;public_servers&#34;</span><span style=color:#000;font-weight:700>,</span>
+            <span style=color:#204a87;font-weight:700>&#34;key&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>},</span>
+          <span style=color:#204a87;font-weight:700>&#34;body&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;servers&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$0&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$1&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;k&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;id&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>2</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ports&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;k&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$2&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;m&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;id&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>3</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;networks&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;m&#34;</span>
+                    <span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span>
+                      <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;public&#34;</span>
+                    <span style=color:#000;font-weight:700>}</span>
+                  <span style=color:#000;font-weight:700>]</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;boolean&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>}</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=create-or-update-a-policy>Create or Update a Policy</h3><pre><code>PUT /v1/policies/&lt;id&gt;
+Content-Type: text/plain
+</code></pre><p>Create or update a policy module.</p><p>If the policy module does not exist, it is created. If the policy module already exists, it is replaced.</p><h3 id=query-parameters-1>Query Parameters</h3><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>metrics</strong> - Return compiler performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li></ul><h4 id=status-codes-2>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>500</strong> - server error</li></ul><p>Before accepting the request, the server will parse, compile, and install the policy module. If the policy module is invalid, one of these steps will fail and the server will respond with 400. The error message in the response will be set to indicate the source of the error.</p><h4 id=example-request-2>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PUT</span> <span style=color:#000>/v1/policies/example1</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>text/plain</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>opa</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>examples</span>
+
+<span style=color:#000>import</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>servers</span>
+<span style=color:#000>import</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>networks</span>
+<span style=color:#000>import</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>ports</span>
+
+<span style=color:#000>public_servers</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>server</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>server</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>servers</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+	<span style=color:#000>server</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>ports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>ports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>k</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>id</span>
+	<span style=color:#000>ports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>k</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>networks</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>networks</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>m</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>id</span>
+	<span style=color:#000>networks</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>m</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>public</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#204a87;font-weight:700>true</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><blockquote><p>cURL&rsquo;s <code>-d/--data</code> flag removes newline characters from input files. Use the <code>--data-binary</code> flag instead.</p></blockquote><h4 id=example-response-2>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{}</span></code></pre></div><h3 id=delete-a-policy>Delete a Policy</h3><pre><code>DELETE /v1/policies/&lt;id&gt;
+</code></pre><p>Delete a policy module.</p><h4 id=query-parameters-2>Query Parameters</h4><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>metrics</strong> - Return compiler performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li></ul><h4 id=status-codes-3>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>If other policy modules in the same package depend on rules in the policy module to be deleted, the server will return 400.</p><h4 id=example-request-3>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>DELETE</span> <span style=color:#000>/v1/policies/example2</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><h4 id=example-response-3>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{}</span></code></pre></div><h2 id=data-api>Data API</h2><p>The Data API exposes endpoints for reading and writing documents in OPA. For an introduction to the different types of documents in OPA see <a href=../how-does-opa-work>How Does OPA Work?</a>.</p><h3 id=get-a-document>Get a Document</h3><pre><code>GET /v1/data/{path:.+}
+</code></pre><p>Get a document.</p><p>The path separator is used to access values inside object and array documents. If the path indexes into an array, the server will attempt to convert the array index to an integer. If the path element cannot be converted to an integer, the server will respond with 404.</p><h4 id=query-parameters-3>Query Parameters</h4><ul><li><strong>input</strong> - Provide an input document. Format is a JSON value that will be used as the value for the input document.</li><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>explain</strong> - Return query explanation in addition to result. Values: <strong>full</strong>.</li><li><strong>metrics</strong> - Return query performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>instrument</strong> - Instrument query evaluation and return a superset of performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>watch</strong> - Set a watch on the data reference if the parameter is present. See <a href=#watches>Watches</a> for more detail.</li></ul><h4 id=status-codes-4>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>The server returns 400 if either:</p><ul><li>The query requires the input document and the caller does not provide it.</li><li>The caller provides the input document but the query already defines it programmatically.</li></ul><p>The server returns 200 if the path refers to an undefined document. In this
+case, the response will not contain a <code>result</code> property.</p><h4 id=response-message>Response Message</h4><ul><li><strong>result</strong> - The base or virtual document referred to by the URL path. If the
+path is undefined, this key will be omitted.</li><li><strong>metrics</strong> - If query metrics are enabled, this field contains query
+performance metrics collected during the parse, compile, and evaluation steps.</li><li><strong>decision_id</strong> - If decision logging is enabled, this field contains a string
+that uniquely identifies the decision. The identifier will be included in the
+decision log event for this decision. Callers can use the identifier for
+correlation purposes.</li></ul><h4 id=example-request-4>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/data/opa/examples/public_servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><h4 id=example-response-4>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s1&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;app&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;https&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;ssh&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s4&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;dev&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-watch-request>Example Watch Request</h4><p>If we make the following GET request:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/data/servers?watch&amp;pretty=true</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><p>Followed by these PATCH requests:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PATCH</span> <span style=color:#000>/v1/data/servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json-patch+json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span><span style=color:#204a87;font-weight:700>&#34;op&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;add&#34;</span><span style=color:#000;font-weight:700>,</span>
+     <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;-&#34;</span><span style=color:#000;font-weight:700>,</span>
+     <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+         <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s5&#34;</span><span style=color:#000;font-weight:700>,</span>
+         <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;job&#34;</span><span style=color:#000;font-weight:700>,</span>
+         <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;amqp&#34;</span><span style=color:#000;font-weight:700>],</span>
+         <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;p3&#34;</span><span style=color:#000;font-weight:700>]</span>
+     <span style=color:#000;font-weight:700>}}</span>
+<span style=color:#000;font-weight:700>]</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PATCH</span> <span style=color:#000>/v1/data/servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json-patch+json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+     <span style=color:#204a87;font-weight:700>&#34;op&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;remove&#34;</span><span style=color:#000;font-weight:700>,</span>
+     <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;1&#34;</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>]</span></code></pre></div><h4 id=example-watch-response>Example Watch Response</h4><p>The response below represents the response <em>after</em> the chunked encoding has been processed.
+It is not complete, as further changes to <code>/data/servers</code> would cause more notifications to be streamed.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span>
+<span style=color:#000>Transfer-Encoding</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>chunked</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s1&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;app&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;https&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;ssh&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s2&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;db&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;mysql&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s3&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;cache&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;memcache&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s4&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;dev&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s1&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;app&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;https&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;ssh&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s2&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;db&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;mysql&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s3&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;cache&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;memcache&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s4&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;dev&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s5&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;job&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;amqp&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s1&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;app&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;https&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;ssh&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s3&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;cache&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;memcache&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s4&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;dev&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;p2&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;http&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s5&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;job&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;p3&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;amqp&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=get-a-document-with-input>Get a Document (with Input)</h3><pre><code>POST /v1/data/{path:.+}
+Content-Type: application/json
+</code></pre><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#a40000>...</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>Get a document that requires input.</p><p>The path separator is used to access values inside object and array documents. If the path indexes into an array, the server will attempt to convert the array index to an integer. If the path element cannot be converted to an integer, the server will respond with 404.</p><p>The request body contains an object that specifies a value for <a href=../how-does-opa-work#the-input-document>The input Document</a>.</p><h4 id=request-headers>Request Headers</h4><ul><li><strong>Content-Type: application/x-yaml</strong>: Indicates the request body is a YAML encoded object.</li></ul><h4 id=query-parameters-4>Query Parameters</h4><ul><li><strong>partial</strong> - Use the partial evaluation (optimization) when evaluating the query.</li><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>explain</strong> - Return query explanation in addition to result. Values: <strong>full</strong>.</li><li><strong>metrics</strong> - Return query performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>instrument</strong> - Instrument query evaluation and return a superset of performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>watch</strong> - Set a watch on the data reference if the parameter is present. See <a href=#watches>Watches</a> for more detail.</li></ul><h4 id=status-codes-5>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>500</strong> - server error</li></ul><p>The server returns 400 if either:</p><ol><li>The query requires an input document and the client did not supply one.</li><li>The query already defines an input document and the client did supply one.</li></ol><p>The server returns 200 if the path refers to an undefined document. In this
+case, the response will not contain a <code>result</code> property.</p><h4 id=response-message-1>Response Message</h4><ul><li><strong>result</strong> - The base or virtual document referred to by the URL path. If the
+path is undefined, this key will be omitted.</li><li><strong>metrics</strong> - If query metrics are enabled, this field contains query
+performance metrics collected during the parse, compile, and evaluation steps.</li><li><strong>decision_id</strong> - If decision logging is enabled, this field contains a string
+that uniquely identifies the decision. The identifier will be included in the
+decision log event for this decision. Callers can use the identifier for
+correlation purposes.</li></ul><p>The examples below assume the following policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>opa</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>examples</span>
+
+<span style=color:#000>import</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>example</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>flag</span>
+
+<span style=color:#000>allow_request</span> <span style=color:#000;font-weight:700>{</span> <span style=color:#000>flag</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#204a87;font-weight:700>true</span> <span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-5>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/v1/data/opa/examples/allow_request</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;example&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;flag&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-response-5>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-6>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/v1/data/opa/examples/allow_request</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;example&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;flag&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-response-6>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{}</span></code></pre></div><h3 id=get-a-document-webhook>Get a Document (Webhook)</h3><pre><code>POST /v0/data/{path:.+}
+Content-Type: application/json
+</code></pre><p>Get a document from a webhook.</p><p>Use this API if you are enforcing policy decisions via webhooks that have pre-defined
+request/response formats. Note, the API path prefix is <code>/v0</code> instead of <code>/v1</code>.</p><p>The request message body defines the content of the <a href=../how-does-opa-work#the-input-document>The input
+Document</a>. The request message body
+may be empty. The path separator is used to access values inside object and
+array documents.</p><h4 id=request-headers-1>Request Headers</h4><ul><li><strong>Content-Type: application/x-yaml</strong>: Indicates the request body is a YAML encoded object.</li></ul><h4 id=query-parameters-5>Query Parameters</h4><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li></ul><h4 id=status-codes-6>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>If the requested document is missing or undefined, the server will return 404 and the message body will contain an error object.</p><p>The examples below assume the following policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>opa</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>examples</span>
+
+<span style=color:#000>import</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>example</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>flag</span>
+
+<span style=color:#000>allow_request</span> <span style=color:#000;font-weight:700>{</span> <span style=color:#000>flag</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#204a87;font-weight:700>true</span> <span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-7>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/v0/data/opa/examples/allow_request</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;example&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;flag&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-response-7>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#204a87;font-weight:700>true</span></code></pre></div><h3 id=create-or-overwrite-a-document>Create or Overwrite a Document</h3><pre><code>PUT /v1/data/{path:.+}
+Content-Type: application/json
+</code></pre><p>Create or overwrite a document.</p><p>If the path does not refer to an existing document, the server will attempt to create all of the necessary containing documents. This behavior is similar in principle to the Unix command <code>mkdir -p</code>.</p><p>The server will respect the <code>If-None-Match</code> header if it is set to <code>*</code>. In this case, the server will not overwrite an existing document located at the path.</p><h4 id=status-codes-7>Status Codes</h4><ul><li><strong>204</strong> - no content (success)</li><li><strong>304</strong> - not modified</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - write conflict</li><li><strong>500</strong> - server error</li></ul><p>If the path refers to a virtual document or a conflicting base document the server will respond with 404. A base document conflict will occur if the parent portion of the path refers to a non-object document.</p><h4 id=example-request-to-initialize-document-with-if-none-match>Example Request To Initialize Document With If-None-Match</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PUT</span> <span style=color:#000>/v1/data/us-west/servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span>
+<span style=color:#000>If-None-Match</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>*</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{}</span></code></pre></div><h4 id=example-response-if-document-already-exists>Example Response If Document Already Exists</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>304</span> <span style=color:#c00;font-weight:700>Not Modified</span></code></pre></div><h4 id=example-response-if-document-does-not-exist>Example Response If Document Does Not Exist</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>204</span> <span style=color:#c00;font-weight:700>No Content</span></code></pre></div><h3 id=patch-a-document>Patch a Document</h3><pre><code>PATCH /v1/data/{path:.+}
+Content-Type: application/json-patch+json
+</code></pre><p>Update a document.</p><p>The path separator is used to access values inside object and array documents. If the path indexes into an array, the server will attempt to convert the array index to an integer. If the path element cannot be converted to an integer, the server will respond with 404.</p><p>The server accepts updates encoded as JSON Patch operations. The message body of the request should contain a JSON encoded array containing one or more JSON Patch operations. Each operation specifies the operation type, path, and an optional value. For more information on JSON Patch, see <a href=https://tools.ietf.org/html/rfc6902>RFC 6902</a>.</p><h4 id=status-codes-8>Status Codes</h4><ul><li><strong>204</strong> - no content (success)</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>The effective path of the JSON Patch operation is obtained by joining the path portion of the URL with the path value from the operation(s) contained in the message body. In all cases, the parent of the effective path MUST refer to an existing document, otherwise the server returns 404. In the case of <strong>remove</strong> and <strong>replace</strong> operations, the effective path MUST refer to an existing document, otherwise the server returns 404.</p><h4 id=example-request-8>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PATCH</span> <span style=color:#000>/v1/data/servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json-patch+json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span><span style=color:#204a87;font-weight:700>&#34;op&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;add&#34;</span><span style=color:#000;font-weight:700>,</span>
+     <span style=color:#204a87;font-weight:700>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;-&#34;</span><span style=color:#000;font-weight:700>,</span>
+     <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+         <span style=color:#204a87;font-weight:700>&#34;id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s5&#34;</span><span style=color:#000;font-weight:700>,</span>
+         <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;job&#34;</span><span style=color:#000;font-weight:700>,</span>
+         <span style=color:#204a87;font-weight:700>&#34;protocols&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;amqp&#34;</span><span style=color:#000;font-weight:700>],</span>
+         <span style=color:#204a87;font-weight:700>&#34;ports&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;p3&#34;</span><span style=color:#000;font-weight:700>]</span>
+     <span style=color:#000;font-weight:700>}}</span>
+<span style=color:#000;font-weight:700>]</span></code></pre></div><h4 id=example-response-8>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>204</span> <span style=color:#c00;font-weight:700>No Content</span></code></pre></div><h3 id=delete-a-document>Delete a Document</h3><pre><code>DELETE /v1/data/{path:.+}
+</code></pre><p>Delete a document.</p><p>The server processes the DELETE method as if the client had sent a PATCH request containing a single remove operation.</p><h4 id=status-codes-9>Status Codes</h4><ul><li><strong>204</strong> - no content (success)</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>If the path refers to a non-existent document, the server returns 404.</p><h4 id=example-request-9>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>DELETE</span> <span style=color:#000>/v1/data/servers</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><h4 id=example-response-9>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>204</span> <span style=color:#c00;font-weight:700>No Content</span></code></pre></div><h2 id=query-api>Query API</h2><h3 id=execute-a-simple-query>Execute a Simple Query</h3><pre><code>POST /
+Content-Type: application/json
+</code></pre><p>Execute a simple query.</p><p>OPA serves POST requests without a URL path by querying for the document at
+path <code>/data/system/main</code>. The content of that document defines the response
+entirely.</p><h4 id=request-headers-2>Request Headers</h4><ul><li><strong>Content-Type: application/x-yaml</strong>: Indicates the request body is a YAML encoded object.</li></ul><h4 id=query-parameters-6>Query Parameters</h4><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li></ul><h4 id=status-codes-10>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - not found</li><li><strong>500</strong> - server error</li></ul><p>If the default decision (defaulting to <code>/system/main</code>) is undefined, the server returns 404.</p><p>The policy example below shows how to define a rule that will
+produce a value for the <code>/data/system/main</code> document. You can configure OPA
+to use a different URL path to serve these queries. See the <a href=../configuration>Configuration Reference</a>
+for more information.</p><p>The request message body is mapped to the <a href=../how-does-opa-work#the-input-document>Input Document</a>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>PUT</span> <span style=color:#000>/v1/policies/example1</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>text/plain</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span>
+
+<span style=color:#000>main</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>msg</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87>sprintf</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;hello, %v&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>msg</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-10>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#a40000>POST /
+</span><span style=color:#a40000>Content-Type: application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;user&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;alice&#34;</span><span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-response-10>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#4e9a06>&#34;hello, alice&#34;</span></code></pre></div><h3 id=execute-an-ad-hoc-query>Execute an Ad-hoc Query</h3><p>Execute an ad-hoc query and return bindings for variables found in the query.</p><pre><code>GET /v1/query
+</code></pre><h4 id=query-parameters-7>Query Parameters</h4><ul><li><strong>q</strong> - The ad-hoc query to execute. OPA will parse, compile, and execute the query represented by the parameter value. The value MUST be URL encoded. Only used in GET method. For POST method the query is sent as part of the request body and this parameter is not used.</li><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>explain</strong> - Return query explanation in addition to result. Values: <strong>full</strong>.</li><li><strong>metrics</strong> - Return query performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>watch</strong> - Set a watch on the query if the parameter is present. See <a href=#watches>Watches</a> for more detail.</li></ul><h4 id=status-codes-11>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>404</strong> - watch ID not found</li><li><strong>500</strong> - server error</li><li><strong>501</strong> - streaming not implemented</li></ul><p>For queries that have large JSON values it is recommended to use the <code>POST</code> method with the query included as the <code>POST</code> body</p><pre><code>POST /v1/query HTTP/1.1
+Content-Type: application/json
+</code></pre><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;query&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data.servers[i].ports[_] = \&#34;p2\&#34;; data.servers[i].name = name&#34;</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-11>Example Request</h4><pre><code>GET /v1/query?q=data.servers[i].ports[_] = &quot;p2&quot;; data.servers[i].name = name HTTP/1.1
+</code></pre><h4 id=example-response-11>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;i&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>3</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;dev&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;i&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;app&#34;</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h2 id=compile-api>Compile API</h2><h3 id=partially-evaluate-a-query>Partially Evaluate a Query</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#a40000>POST /v1/compile
+</span><span style=color:#a40000>Content-Type: application/json</span></code></pre></div><p>Partially evaluate a query.</p><p>The <a href=#compile-api>Compile API</a> allows you to partially evaluate Rego queries
+and obtain a simplified version of the policy. For more details on Partial
+Evaluation in OPA, see <a href=https://blog.openpolicyagent.org/partial-evaluation-162750eaf422>this post on blog.openpolicyagent.org</a>.</p><h4 id=request-body>Request Body</h4><p>Compile API requests contain the following fields:</p><table><thead><tr><th>Field</th><th>Type</th><th>Requried</th><th>Description</th></tr></thead><tbody><tr><td><code>query</code></td><td><code>string</code></td><td>Yes</td><td>The query to partially evaluate and compile.</td></tr><tr><td><code>input</code></td><td><code>any</code></td><td>No</td><td>The input document to use during partial evaluation (default: undefined).</td></tr><tr><td><code>unknowns</code></td><td><code>array[string]</code></td><td>No</td><td>The terms to treat as unknown during partial evaluation (default: <code>[&quot;input&quot;]</code>]).</td></tr></tbody></table><h4 id=query-parameters-8>Query Parameters</h4><ul><li><strong>pretty</strong> - If parameter is <code>true</code>, response will formatted for humans.</li><li><strong>explain</strong> - Return query explanation in addition to result. Values: <strong>full</strong>.</li><li><strong>metrics</strong> - Return query performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li><li><strong>instrument</strong> - Instrument query evaluation and return a superset of performance metrics in addition to result. See <a href=#performance-metrics>Performance Metrics</a> for more detail.</li></ul><h4 id=status-codes-12>Status Codes</h4><ul><li><strong>200</strong> - no error</li><li><strong>400</strong> - bad request</li><li><strong>500</strong> - server error</li></ul><p>The example below assumes that OPA has been given the following policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>example</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>subject</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>clearance_level</span> <span style=color:#ce5c00;font-weight:700>&gt;=</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>reports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>i</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>clearance_level</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-request-12>Example Request</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/v1/compile</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;query&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data.example.allow == true&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;subject&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;clearance_level&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>4</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#204a87;font-weight:700>&#34;unknowns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#4e9a06>&#34;data.reports&#34;</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=example-response-12>Example Response</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;queries&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+      <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#000;font-weight:700>{</span>
+          <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+          <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;gte&#34;</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;number&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>4</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;reports&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;i1&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;clearance_level&#34;</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>}</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>]</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h4 id=unconditional-results-from-partial-evaluation>Unconditional Results from Partial Evaluation</h4><p>When you partially evaluate a query with the Compile API, OPA returns a new set of queries and supporting policies. However, in some cases, the result of Partial Evaluation is a conclusive, unconditional answer.</p><p>For example, if you extend to policy above to include a &ldquo;break glass&rdquo; condition, the decision may be to allow all requests regardless of clearance level.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>example</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>subject</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>clearance_level</span> <span style=color:#ce5c00;font-weight:700>&gt;=</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>reports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>clearance_level</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>break_glass</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>true</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>In this case, if <code>data.break_glass</code> is <code>true</code> then the query
+<code>data.example.allow == true</code> will <em>always</em> be true. If the query is
+always true, the <code>&quot;queries&quot;</code> value in the result will contain an empty
+array. The empty array indicates that your query can be satisfied
+without any further evaluation.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;queries&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+      <span style=color:#000;font-weight:700>[],</span>
+      <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#000;font-weight:700>{</span>
+          <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+          <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;gte&#34;</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;number&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>4</span>
+            <span style=color:#000;font-weight:700>},</span>
+            <span style=color:#000;font-weight:700>{</span>
+              <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ref&#34;</span><span style=color:#000;font-weight:700>,</span>
+              <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;data&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;reports&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$02&#34;</span>
+                <span style=color:#000;font-weight:700>},</span>
+                <span style=color:#000;font-weight:700>{</span>
+                  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+                  <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;clearance_level&#34;</span>
+                <span style=color:#000;font-weight:700>}</span>
+              <span style=color:#000;font-weight:700>]</span>
+            <span style=color:#000;font-weight:700>}</span>
+          <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>}</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>]</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>It is also possible for queries to <em>never</em> be true. For example, the
+original policy could be extended to require that users be granted an
+exception:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>example</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>subject</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>clearance_level</span> <span style=color:#ce5c00;font-weight:700>&gt;=</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>reports</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>clearance_level</span>
+  <span style=color:#000>exceptions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>subject</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>exceptions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;bob&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000>exceptions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;alice&#34;</span><span style=color:#ce5c00;font-weight:700>]</span></code></pre></div><p>In this case, if we execute query on behalf of a user that does not
+have an exception (e.g., <code>&quot;eve&quot;</code>), the OPA response will not contain a
+<code>queries</code> field at all. This indicates there are NO conditions that
+could make the query true.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>The following table summarizes the behavior for partial evaluation results.</p><table><thead><tr><th>Example Query</th><th>Unknowns</th><th>Result</th><th>Description</th></tr></thead><tbody><tr><td><code>input.x &gt; 0</code></td><td><code>[&quot;input&quot;]</code></td><td><code>{&quot;result&quot;: {&quot;queries&quot;: [[input.x &gt; 0]]}}</code></td><td>The query is partially evaluated and remaining conditions are returned.</td></tr><tr><td><code>input.x &gt; 0</code></td><td>Not specified.</td><td><code>{&quot;result&quot;: {&quot;queries&quot;: [[input.x &gt; 0]]}}</code></td><td>If the set of unknowns is not specified, it defaults to <code>[&quot;input&quot;]</code>.</td></tr><tr><td><code>input.x &gt; 0</code></td><td><code>[]</code></td><td><code>{&quot;result&quot;: {}}</code></td><td>The query is false/undefined because there are no unknowns.</td></tr><tr><td><code>1 &gt; 0</code></td><td>N/A</td><td><code>{&quot;result&quot;: {&quot;queries&quot;: [[]]}}</code></td><td>The query is always true.</td></tr><tr><td><code>1 &lt; 0</code></td><td>N/A</td><td><code>{&quot;result&quot;: {}}</code></td><td>The query is always false.</td></tr></tbody></table><blockquote><p>The partially evaluated queries are represented as strings in the table above. The actual API response contains the JSON AST representation.</p></blockquote><h2 id=authentication>Authentication</h2><p>The API is secured via <a href=../security>HTTPS, Authentication, and Authorization</a>.</p><h3 id=bearer-tokens>Bearer Tokens</h3><p>When OPA is started with the <code>--authentication=token</code> command line flag,
+clients MUST provide a Bearer token in the HTTP Authorization header:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>GET</span> <span style=color:#000>/v1/data/exempli-gratia</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Authorization</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>Bearer my-secret-token</span></code></pre></div><p>Bearer tokens must be represented with a valid HTTP header value character
+sequence.</p><p>OPA will extract the Bearer token value (which is set to <code>my-secret-token</code>
+above) and provide it to the authorization component inside OPA that will (i)
+validate the token and (ii) execute the authorization policy configured by the
+admin.</p><h2 id=errors>Errors</h2><p>All of the API endpoints use standard HTTP status codes to indicate success or
+failure of an API call. If an API call fails, the response will contain a JSON
+encoded object that provides more detail. The <code>errors</code> and <code>location</code> fields are
+optional:</p><pre><code>{
+  &quot;code&quot;: &quot;invalid_parameter&quot;,
+  &quot;message&quot;: &quot;error(s) occurred while compiling module(s)&quot;,
+  &quot;errors&quot;: [
+    {
+      &quot;code&quot;: &quot;rego_unsafe_var_error&quot;,
+      &quot;message&quot;: &quot;var x is unsafe&quot;,
+      &quot;location&quot;: {
+        &quot;file&quot;: &quot;example&quot;,
+        &quot;row&quot;: 3,
+        &quot;col&quot;: 1
+      }
+    }
+  ]
+}
+</code></pre><h3 id=method-not-allowed>Method not Allowed</h3><p>OPA will respond with a 405 Error (Method Not Allowed) if the method used to access the URL is not supported. For example, if a client uses the <em>HEAD</em> method to access any path within &ldquo;/v1/data/{path:.*}&ldquo;, a 405 will be returned.</p><h2 id=explanations>Explanations</h2><p>OPA supports query explanations that describe (in detail) the steps taken to
+produce query results.</p><p>Explanations can be requested for:</p><ul><li><a href=#data-api>Data API</a> GET queries</li><li><a href=#query-api>Query API</a> queries</li></ul><p>Explanations are requested by setting the <code>explain</code> query parameter to one of
+the following values:</p><ul><li><strong>full</strong> - returns a full query trace containing every step in the query evaluation process.</li></ul><p>By default, explanations are represented in a machine-friendly format. Set the
+<code>pretty</code> parameter to request a human-friendly format for debugging purposes.</p><h3 id=trace-events>Trace Events</h3><p>When the <code>explain</code> query parameter is set to <strong>full</strong> , the response contains an array of Trace Event objects.</p><p>Trace Event objects contain the following fields:</p><ul><li><strong>op</strong> - identifies the kind of Trace Event. Values: <strong>&ldquo;Enter&rdquo;</strong>, <strong>&ldquo;Exit&rdquo;</strong>, <strong>&ldquo;Eval&rdquo;</strong>, <strong>&ldquo;Fail&rdquo;</strong>, <strong>&ldquo;Redo&rdquo;</strong>.</li><li><strong>query_id</strong> - uniquely identifies the query that the Trace Event was emitted for.</li><li><strong>parent_id</strong> - identifies the parent query.</li><li><strong>type</strong> - indicates the type of the <strong>node</strong> field. Values: <strong>&ldquo;expr&rdquo;</strong>, <strong>&ldquo;rule&rdquo;</strong>, <strong>&ldquo;body&rdquo;</strong>.</li><li><strong>node</strong> - contains the AST element associated with the evaluation step.</li><li><strong>locals</strong> - contains the term bindings from the query at the time when the Trace Event was emitted.</li></ul><h4 id=query-ids>Query IDs</h4><p>Queries often reference rules or contain comprehensions. In both cases, query
+evaluation involves evaluation of one or more other queries, e.g., the body of
+the rule or comprehension.</p><p>Trace Events from different queries can be distinguished by the <strong>query_id</strong>
+field.</p><p>Trace Events from related queries can be identified by the <strong>parent_id</strong> field.</p><p>For example, if query A references a rule R, Trace Events emitted as part of
+evaluating rule R&rsquo;s body will have the <strong>parent_id</strong> field set to query A&rsquo;s
+<strong>query_id</strong>.</p><h4 id=types-of-events>Types of Events</h4><p>Each Trace Event represents a step in the query evaluation process. Trace Events
+are emitted at the following points:</p><ul><li><strong>enter</strong> - before a body or rule is evaluated.</li><li><strong>exit</strong> - after a body or rule has evaluated successfully.</li><li><strong>eval</strong> - before an expression is evaluated.</li><li><strong>fail</strong> - after an expression has evaluated to false.</li><li><strong>redo</strong> - before evaluation restarts from a body, rule, or expression.</li></ul><p>By default, OPA searches for all sets of term bindings that make all expressions
+in the query evaluate to true. Because there may be multiple answers, the search
+can <em>restart</em> when OPA determines the query is true or false. When the search
+restarts, a <strong>Redo</strong> Trace Event is emitted.</p><h4 id=example-trace-event>Example Trace Event</h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;op&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eval&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;query_id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>20</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;parent_id&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>0</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;expr&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;node&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;index&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>1</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;terms&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+      <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;eq&#34;</span>
+      <span style=color:#000;font-weight:700>},</span>
+      <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;x&#34;</span>
+      <span style=color:#000;font-weight:700>},</span>
+      <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;y&#34;</span>
+      <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>]</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#204a87;font-weight:700>&#34;locals&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;key&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;var&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;x&#34;</span>
+      <span style=color:#000;font-weight:700>},</span>
+      <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;type&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;string&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;value&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;hello&#34;</span>
+      <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h2 id=performance-metrics>Performance Metrics</h2><p>OPA can report detailed performance metrics at runtime. Performance metrics can
+be requested on individual API calls and are returned inline with the API
+response. To enable performance metric collection on an API call, specify the
+<code>metrics=true</code> query parameter when executing the API call. Performance metrics
+are currently supported for the following APIs:</p><ul><li>Data API (GET and POST)</li><li>Policy API (all methods)</li><li>Query API (all methods)</li></ul><p>For example:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/v1/data/example?metrics=true</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span></code></pre></div><p>Response:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span> <span style=color:#0000cf;font-weight:700>200</span> <span style=color:#c00;font-weight:700>OK</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;metrics&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;timer_rego_query_compile_ns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>69994</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;timer_rego_query_eval_ns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>48425</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;timer_rego_query_parse_ns&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>4096</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#204a87;font-weight:700>&#34;result&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;some_strings&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+      <span style=color:#4e9a06>&#34;hello&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#4e9a06>&#34;world&#34;</span>
+    <span style=color:#000;font-weight:700>]</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>OPA currently supports the following query performance metrics:</p><ul><li><strong>timer_rego_query_parse_ns</strong>: time taken (in nanonseconds) to parse the query.</li><li><strong>timer_rego_query_compile_ns</strong>: time taken (in nanonseconds) to compile the query.</li><li><strong>timer_rego_query_eval_ns</strong>: time taken (in nanonseconds) to evaluate the query.</li><li><strong>timer_rego_module_parse_ns</strong>: time taken (in nanoseconds) to parse the input policy module.</li><li><strong>timer_rego_module_compile_ns</strong>: time taken (in nanoseconds) to compile the loaded policy modules.</li><li><strong>timer_server_handler_ns</strong>: time take (in nanoseconds) to handle the API request.</li></ul><p>OPA also supports query instrumentation. To enable query instrumentation,
+specify the <code>instrument=true</code> query parameter when executing the API call.
+Query instrumentation can help diagnose performance problems, however, it can
+add significant overhead to query evaluation. We recommend leaving query
+instrumentation off unless you are debugging a performance problem.</p><h2 id=watches>Watches</h2><p>OPA can set watches on queries and report whenever the result of evaluating the query has changed. When a watch is set on a query, the requesting connection will be maintained as the query results are streamed back in HTTP Chunked Encoding format. A notification reflecting a certain change to the query results will be delivered <em>at most once</em>. That is, if a watch is set on <code>data.x</code>, and then multiple writes are made to <code>data.x</code>, say <code>1</code>, <code>2</code> and <code>3</code>, only the notification reflecting <code>data.x=3</code> is always seen eventually (assuming the watch is not ended, there are no connection problems, etc). The notifications reflecting <code>data.x=1</code> and <code>data.x=2</code> <em>might</em> be seen. However, the notifications sent are guaranteed to be in order (<code>data.x=2</code> will always come after <code>data.x=1</code>, if it comes).</p><p>The notification stream will not be delimited by any value; the client is expected to be able to parse JSON values from the stream one by one, recognizing where one ends and the next begins.</p><p>The notification stream is a stream of JSON objects, each of which has the following structure:</p><pre><code>{
+    &quot;result&quot;: &lt;result&gt;,
+    &quot;error&quot;: &lt;error&gt;,
+    &quot;metrics&quot;: &lt;metrics&gt;,
+    &quot;explanation&quot;: &lt;explanation&gt;,
+}
+</code></pre><p>The <code>error</code> field is optional; it is omitted when no errors occur. If it is present, it is an <a href=#errors>Error</a> describing any errors encountered while evaluating the query the watch was set on. If the policies on the server are changed such that the query no longer compiles, the contents of the error&rsquo;s <code>message</code> field will start with the text &ldquo;watch invalidated:&rdquo; and will be followed with the reason for invalidation. The watch will be ended by the server and the stream closed.</p><p>The <code>metrics</code> field represents <a href=#performance-metrics>Performance Metrics</a> for the evaluation of the query. It will only be present if metrics were requested in the API call that started the watch.</p><p>The <code>explanation</code> field represents an <a href=#explanations>Explanation</a> of how the query answer was found. It will only be present if explanations were requested in the API call that started the watch.</p><p>If there are no errors, the <code>result</code> field will be a JSON array of the results of evaluating the query. The format of a result is:</p><pre><code>{
+    &quot;expressions&quot;: [
+        {
+            &quot;value&quot;: true,
+            &quot;text&quot;: &quot;a = data.x&quot;,
+            &quot;location&quot;:{&quot;row&quot;:1,&quot;col&quot;:1}
+        },
+        ...
+    ],
+    &quot;bindings&quot;: {...}
+}
+</code></pre><p>The <code>expressions</code> field is an array of the results of evaluating each of the expressions in the query. <code>value</code> is the expression&rsquo;s value, <code>text</code> is the actual expression, and <code>location</code> describes the location of the expression within the query. The values above are examples.</p><p>The <code>bindings</code> field is a JSON object mapping <code>string</code>s to JSON values that describe the variable bindings resulting from evaluating the query.</p><p>If the watch was set on a data reference instead of a query, the <code>result</code> field will simply be the value of the document requested, instead of an array of values.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

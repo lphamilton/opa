@@ -1,0 +1,356 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="Comparison to Other Systems"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/comparison-to-other-systems/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/comparison-to-other-systems/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Comparison to Other Systems</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#role-based-access-control-rbac>Role-based access control (RBAC)</a><ul><li><a href=#rbac-separation-of-duty-sod>RBAC Separation of duty (SOD)</a></li></ul></li><li><a href=#attribute-based-access-control-abac>Attribute-based access control (ABAC)</a></li><li><a href=#amazon-web-services-iam>Amazon Web Services IAM</a></li><li><a href=#xacml>XACML</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Comparison to Other Systems</p></div></section><section class=section><div class=content><p>Often the easiest way to understand a new language is by comparing
+it to languages you already know. Here we show how policies from
+several existing policy systems can be implemented with the Open
+Policy Agent.</p><h2 id=role-based-access-control-rbac>Role-based access control (RBAC)</h2><p>Role-based access control (RBAC) is pervasive today for authorization.
+To use RBAC for authorization, you write down two different kinds of
+information.</p><ul><li>Which users have which roles</li><li>Which roles have which permissions</li></ul><p>Once you provide RBAC with both those assignments, RBAC tells you
+how to make an authorization decision. A user is authorized for
+all those permissions assigned to any of the roles she is assigned to.</p><p>For example, we might have the following user/role assignments:</p><table><thead><tr><th>User</th><th>Role</th></tr></thead><tbody><tr><td><code>alice</code></td><td><code>engineering</code></td></tr><tr><td><code>alice</code></td><td><code>webdev</code></td></tr><tr><td><code>bob</code></td><td><code>hr</code></td></tr></tbody></table><p>And the following role/permission assignments:</p><table><thead><tr><th>Role</th><th>Permission</th><th>Resource</th></tr></thead><tbody><tr><td><code>engineering</code></td><td><code>read</code></td><td><code>server123</code></td></tr><tr><td><code>webdev</code></td><td><code>write</code></td><td><code>server123</code></td></tr><tr><td><code>webdev</code></td><td><code>read</code></td><td><code>server123</code></td></tr><tr><td><code>hr</code></td><td><code>write</code></td><td><code>database456</code></td></tr></tbody></table><p>In this example, RBAC makes the following authorization decisions:</p><table><thead><tr><th>User</th><th>Operation</th><th>Resource</th><th>Decision</th></tr></thead><tbody><tr><td><code>alice</code></td><td><code>read</code></td><td><code>server123</code></td><td><code>allow</code> because <code>alice</code> is in <code>engineering</code></td></tr><tr><td><code>alice</code></td><td><code>write</code></td><td><code>server123</code></td><td><code>allow</code> because <code>alice</code> is in <code>webdev</code></td></tr><tr><td><code>bob</code></td><td><code>read</code></td><td><code>database456</code></td><td><code>allow</code> because <code>bob</code> is in <code>hr</code></td></tr><tr><td><code>bob</code></td><td><code>read</code></td><td><code>server123</code></td><td><code>deny</code> because <code>bob</code> is not in <code>engineering</code> or <code>webdev</code></td></tr></tbody></table><p>With OPA, you can write the following snippets to implement the
+example RBAC policy shown above.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>rbac</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#8f5902;font-style:italic># Policy decisions are made using the following input</span>
+<span style=color:#8f5902;font-style:italic>#   Not part of the policy but good as documentation</span>
+<span style=color:#8f5902;font-style:italic># input = {</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;user&#34;: &#34;bob&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;action&#34;: &#34;read&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;object&#34;: &#34;server123&#34;</span>
+<span style=color:#8f5902;font-style:italic># }</span>
+
+<span style=color:#8f5902;font-style:italic># user-role assignments</span>
+<span style=color:#000>user_roles</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;alice&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;engineering&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;webdev&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#4e9a06>&#34;bob&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;hr&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># role-permissions assignments</span>
+<span style=color:#000>role_permissions</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;engineering&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;read&#34;</span><span style=color:#000;font-weight:700>,</span>  <span style=color:#4e9a06>&#34;object&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server123&#34;</span><span style=color:#000;font-weight:700>}</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#4e9a06>&#34;webdev&#34;</span><span style=color:#000;font-weight:700>:</span>      <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;read&#34;</span><span style=color:#000;font-weight:700>,</span>  <span style=color:#4e9a06>&#34;object&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server123&#34;</span><span style=color:#000;font-weight:700>},</span>
+                    <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;write&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;object&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;server123&#34;</span><span style=color:#000;font-weight:700>}</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#4e9a06>&#34;hr&#34;</span><span style=color:#000;font-weight:700>:</span>          <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;read&#34;</span><span style=color:#000;font-weight:700>,</span>  <span style=color:#4e9a06>&#34;object&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;database456&#34;</span><span style=color:#000;font-weight:700>}</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># logic that implements RBAC.</span>
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># lookup the list of roles for the user</span>
+    <span style=color:#000>roles</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>user_roles</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># for each role in that list</span>
+    <span style=color:#000>r</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>roles</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># lookup the permissions list for role r</span>
+    <span style=color:#000>permissions</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>role_permissions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>r</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># for each permission</span>
+    <span style=color:#204a87>p</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>permissions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check if the permission granted to r matches the user&#39;s request</span>
+    <span style=color:#204a87>p</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>action</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;object&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>object</span><span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=rbac-separation-of-duty-sod>RBAC Separation of duty (SOD)</h3><p>Separation of duty (SOD) refers to the idea that there are certain
+combinations of permissions that no one should have at the same time.
+For example, no one should be able to both create payments and approve payments.</p><p>In RBAC, that means there are some pairs of roles that no one should be
+assigned simultaneously. For example, any user assigned both of the roles
+in each pair below would violate SOD.
+* create-payment and approve-payment
+* create-vendor and pay-vendor</p><p>OPA&rsquo;s API does not yet let you enforce SOD by rejecting improper role-assignments,
+but it does let you express SOD constraints and ask for all SOD violations,
+as shown below. (Here we assume the statements below are added to the RBAC
+statements above.)</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#8f5902;font-style:italic># Pairs of roles that no user can be assigned to simultaneously</span>
+<span style=color:#000>sod_roles</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span>
+	<span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;create-payment&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;approve-payment&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;create-vendor&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;pay-vendor&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#ce5c00;font-weight:700>]</span>
+
+<span style=color:#8f5902;font-style:italic># Find all users violating SOD</span>
+<span style=color:#000>sod_violation</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># grab one role for a user</span>
+    <span style=color:#000>role1</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>user_role</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>][</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># grab another role for that same user</span>
+    <span style=color:#000>role2</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>user_role</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>][</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check if those roles are forbidden by SOD</span>
+    <span style=color:#000>sod_roles</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>role1</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>role2</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>(For those familiar with SOD, this is the static version since SOD violations
+happen whenever a user is assigned two conflicting roles. The dynamic version of SOD allows
+a single user to be assigned two conflicting roles but requires that the same user not
+utilize those roles on the same transaction, which is out of scope for this document.)</p><h2 id=attribute-based-access-control-abac>Attribute-based access control (ABAC)</h2><p>With attribute-based access control, you make policy decisions using the
+attributes of the users, objects, and actions involved in the request.
+It has three main components:
+* Attributes for users
+* Attributes for objects
+* Logic dictating which attribute combinations are authorized</p><p>For example, we might know the following attributes for our users
+* alice
+* joined the company 15 years ago
+* is a trader
+* bob
+* joined the company 5 years ago
+* is an analyst</p><p>We would also have attributes for the objects, in this case stock ticker symbols.
+* MSFT
+* is sold on NASDAQ
+* sells at $59.20 per share
+* AMZN
+* is sold on NASDAQ
+* sells at $813.64 per share</p><p>An example ABAC policy in english might be:
+* Traders may purchase NASDAQ stocks for under $2M
+* Traders with 10+ years experience may purchase NASDAQ stocks for under $5M</p><p>OPA supports ABAC policies as shown below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>abac</span>
+
+<span style=color:#8f5902;font-style:italic># Sample input</span>
+<span style=color:#8f5902;font-style:italic># input = {</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;user&#34;: &#34;alice&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;ticker&#34;: &#34;MSFT&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;action&#34;: &#34;buy&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;amount&#34;: 1000000</span>
+<span style=color:#8f5902;font-style:italic># }</span>
+
+<span style=color:#8f5902;font-style:italic># User attributes</span>
+<span style=color:#000>user_attributes</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;alice&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;tenure&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>15</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;title&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;trader&#34;</span><span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;bob&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;tenure&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>5</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;title&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;analyst&#34;</span><span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Stock attributes</span>
+<span style=color:#000>ticker_attributes</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;MSFT&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;exchange&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;NASDAQ&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;price&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>59</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#0000cf;font-weight:700>20</span><span style=color:#000;font-weight:700>},</span>
+    <span style=color:#4e9a06>&#34;AMZN&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;exchange&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;NASDAQ&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;price&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#0000cf;font-weight:700>813</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#0000cf;font-weight:700>64</span><span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># all traders may buy NASDAQ under $2M</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># lookup the user&#39;s attributes</span>
+    <span style=color:#000>user</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>user_attributes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check that the user is a trader</span>
+    <span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>title</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;trader&#34;</span>
+    <span style=color:#8f5902;font-style:italic># check that the stock being purchased is sold on the NASDAQ</span>
+    <span style=color:#000>ticker_attributes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>ticker</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>exchange</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;NASDAQ&#34;</span>
+    <span style=color:#8f5902;font-style:italic># check that the purchase amount is under $2M</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>amount</span> <span style=color:#ce5c00;font-weight:700>&lt;=</span> <span style=color:#0000cf;font-weight:700>2000000</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># traders with 10+ years experience may buy NASDAQ under $5M</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># lookup the user&#39;s attributes</span>
+    <span style=color:#000>user</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>user_attributes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check that the user is a trader</span>
+    <span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>title</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;trader&#34;</span>
+    <span style=color:#8f5902;font-style:italic># check that the stock being purchased is sold on the NASDAQ</span>
+    <span style=color:#000>ticker_attributes</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>ticker</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>exchange</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;NASDAQ&#34;</span>
+    <span style=color:#8f5902;font-style:italic># check that the user has at least 10 years of experience</span>
+    <span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>tenure</span> <span style=color:#ce5c00;font-weight:700>&gt;</span> <span style=color:#0000cf;font-weight:700>10</span>
+    <span style=color:#8f5902;font-style:italic># check that the purchase amount is under $5M</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>amount</span> <span style=color:#ce5c00;font-weight:700>&lt;=</span> <span style=color:#0000cf;font-weight:700>5000000</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>In OPA, there&rsquo;s nothing special about users and objects. You can attach
+attributes to anything. And the attributes can themselves be structured JSON objects
+and have attributes on attributes on attributes. Because OPA was designed to work
+with arbitrarily nested JSON data, it supports incredibly rich ABAC policies.</p><h2 id=amazon-web-services-iam>Amazon Web Services IAM</h2><p>Amazon Web Services (AWS) lets you create policies that you attach to users, roles, groups,
+and resources. You write <code>allow</code> and <code>deny</code> statements to decide which users can
+execute which API calls on which resources. By default all API access is denied;
+policy statements can explicitly allow API access. If an API is both allowed and
+denied, it is always denied.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;Version&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;2012-10-17&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;Statement&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;Sid&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;FirstStatement&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Effect&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Allow&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#34;iam:ChangePassword&#34;</span><span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;Resource&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;*&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;Sid&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;SecondStatement&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Effect&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Allow&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;s3:ListAllMyBuckets&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Resource&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;*&#34;</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;Sid&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;ThirdStatement&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Effect&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Allow&#34;</span><span style=color:#000;font-weight:700>,</span>
+      <span style=color:#204a87;font-weight:700>&#34;Action&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;s3:List*&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;s3:Get*&#34;</span>
+      <span style=color:#000;font-weight:700>],</span>
+      <span style=color:#204a87;font-weight:700>&#34;Resource&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+        <span style=color:#4e9a06>&#34;arn:aws:s3:::confidential-data&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;arn:aws:s3:::confidential-data/*&#34;</span>
+      <span style=color:#000;font-weight:700>]</span>
+    <span style=color:#000;font-weight:700>}</span>
+  <span style=color:#000;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>In OPA, you write each of the AWS <code>allow</code> statements as a separate statement, and you
+expect the input to have <code>user</code>, <code>action</code>, and <code>resource</code> fields.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>aws</span>
+
+<span style=color:#8f5902;font-style:italic># input = {</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;user&#34;: &#34;alice&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;action&#34;: &#34;ec2:StartInstance&#34;</span>
+<span style=color:#8f5902;font-style:italic>#     &#34;resource&#34;: &#34;arn:aws:ec2:::instance/i78999879&#34;</span>
+<span style=color:#8f5902;font-style:italic># }</span>
+
+<span style=color:#8f5902;font-style:italic># FirstStatement</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>action</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;iam:ChangePassword&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># SecondStatement</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>action</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;s3:ListAllMyBuckets&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># ThirdStatement</span>
+<span style=color:#8f5902;font-style:italic>#  Use helpers to handle implicit OR in the AWS policy.</span>
+<span style=color:#8f5902;font-style:italic>#  Below both &#39;actions_match&#39; and &#39;resources_match&#39; must be true.</span>
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>actions_match</span>
+    <span style=color:#000>resources_match</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># actions_match is true if input.action matches one in the list</span>
+<span style=color:#000>actions_match</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># iterate over the actions in the list</span>
+    <span style=color:#000>actions</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;s3:List.*&#34;</span><span style=color:#000;font-weight:700>,</span><span style=color:#4e9a06>&#34;s3:Get.*&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>action</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>actions</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check if input.action matches an action</span>
+    <span style=color:#000>regex</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>globs_match</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>action</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>action</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># resources_match is true if input.resource matches one in the list</span>
+<span style=color:#000>resources_match</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># iterate over the resources in the list</span>
+    <span style=color:#000>resources</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;arn:aws:s3:::confidential-data&#34;</span><span style=color:#000;font-weight:700>,</span><span style=color:#4e9a06>&#34;arn:aws:s3:::confidential-data/.*&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>resource</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>resources</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#8f5902;font-style:italic># check if input.resource matches a resource</span>
+    <span style=color:#000>regex</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>globs_match</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>resource</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>resource</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h2 id=xacml>XACML</h2><p>eXtensible Access Control Markup Language (XACML) was designed to express security policies: allow/deny decisions using attributes of users, resources, actions, and the environment.
+The following policy says that users from the organization Curtiss or Packard who are US or GreatBritain nationals and who work on DetailedDesign or Simulation are permitted access to documents about NavigationSystems.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#204a87;font-weight:700>&lt;Policy</span> <span style=color:#c4a000>PolicyId=</span><span style=color:#4e9a06>&#34;urn:curtiss:ba:taa:taa-1.1&#34;</span> <span style=color:#c4a000>RuleCombiningAlgId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+  <span style=color:#204a87;font-weight:700>&lt;Description&gt;</span>Policy for Business Authorization category TAA-1.1<span style=color:#204a87;font-weight:700>&lt;/Description&gt;</span>
+  <span style=color:#204a87;font-weight:700>&lt;Target&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;AnyOf&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;AllOf&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;Match</span>
+         <span style=color:#c4a000>MatchId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-equal&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>NavigationSystem<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeDesignator</span>
+           <span style=color:#c4a000>MustBePresent=</span><span style=color:#4e9a06>&#34;true&#34;</span>
+           <span style=color:#c4a000>Category=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:3.0:attribute-category:resource&#34;</span>
+           <span style=color:#c4a000>AttributeId=</span><span style=color:#4e9a06>&#34;urn:curtiss:names:tc:xacml:1.0:resource:Topics&#34;</span>
+           <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>/&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;/Match&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;/AllOf&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;/AnyOf&gt;</span>
+  <span style=color:#204a87;font-weight:700>&lt;/Target&gt;</span>
+  <span style=color:#204a87;font-weight:700>&lt;Rule</span> <span style=color:#c4a000>Effect=</span><span style=color:#4e9a06>&#34;Permit&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;Description</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;Target&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;Actions&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;Action&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;ActionMatch</span> <span style=color:#c4a000>MatchId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-equal&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+            <span style=color:#204a87;font-weight:700>&lt;ActionAttributeDesignator</span>
+              <span style=color:#c4a000>AttributeId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:action:action-id&#34;</span>
+              <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+            <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>Any<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;/ActionMatch&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;/Action&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;/Actions&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;/Target&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;Condition</span> <span style=color:#c4a000>FunctionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:and&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>xsi:type=</span><span style=color:#4e9a06>&#34;AtLeastMemberOf&#34;</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-bag&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>Curtiss<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>Packard<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;AttributeDesignator</span> <span style=color:#c4a000>AttributeId=</span><span style=color:#4e9a06>&#34;http://schemas.tscp.org/2012-03/claims/OrganizationID&#34;</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>xsi:type=</span><span style=color:#4e9a06>&#34;AtLeastMemberOf&#34;</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-bag&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>US<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>GB<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;AttributeDesignator</span> <span style=color:#c4a000>AttributeId=</span><span style=color:#4e9a06>&#34;http://schemas.tscp.org/2012-03/claims/Nationality&#34;</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>xsi:type=</span><span style=color:#4e9a06>&#34;AtLeastMemberOf&#34;</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:string-bag&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>DetailedDesign<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+          <span style=color:#204a87;font-weight:700>&lt;AttributeValue</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span><span style=color:#204a87;font-weight:700>&gt;</span>Simulation<span style=color:#204a87;font-weight:700>&lt;/AttributeValue&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+        <span style=color:#204a87;font-weight:700>&lt;AttributeDesignator</span> <span style=color:#c4a000>AttributeId=</span><span style=color:#4e9a06>&#34;http://schemas.tscp.org/2012-03/claims/Work-Effort&#34;</span> <span style=color:#c4a000>DataType=</span><span style=color:#4e9a06>&#34;http://www.w3.org/2001/XMLSchema#string&#34;</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;/Apply&gt;</span>
+      <span style=color:#204a87;font-weight:700>&lt;Apply</span> <span style=color:#c4a000>xsi:type=</span><span style=color:#4e9a06>&#34;AndFunction&#34;</span> <span style=color:#c4a000>functionId=</span><span style=color:#4e9a06>&#34;urn:oasis:names:tc:xacml:1.0:function:and&#34;</span> <span style=color:#204a87;font-weight:700>/&gt;</span>
+    <span style=color:#204a87;font-weight:700>&lt;/Condition&gt;</span>
+  <span style=color:#204a87;font-weight:700>&lt;/Rule&gt;</span>
+<span style=color:#204a87;font-weight:700>&lt;/Policy&gt;</span></code></pre></div><p>The same statement is shown below in OPA. Here the inputs are assumed to be roughly the
+same as for XACML: attributes of users, actions, and resources.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>xacml</span>
+
+<span style=color:#8f5902;font-style:italic># input = {</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;user&#34;: {&#34;name&#34;: &#34;alice&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#            &#34;organization&#34;: &#34;Packard&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#            &#34;nationality&#34;: &#34;GB&#34;,</span>
+<span style=color:#8f5902;font-style:italic>#            &#34;work_effort&#34;: &#34;DetailedDesign&#34;},</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;resource&#34;: {&#34;NavigationSystem&#34;: true},</span>
+<span style=color:#8f5902;font-style:italic>#    &#34;action&#34;: {&#34;name&#34;: &#34;read&#34;}</span>
+<span style=color:#8f5902;font-style:italic># }</span>
+
+<span style=color:#000>permit</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#8f5902;font-style:italic># Check that resource has a &#34;NavigationSystem&#34; entry</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>resource</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;NavigationSystem&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+
+    <span style=color:#8f5902;font-style:italic># Check that organization is one of the options (underscore implements &#34;any&#34;)</span>
+    <span style=color:#000>org_options</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;Packard&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;Curtiss&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>organization</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>org_options</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+
+    <span style=color:#8f5902;font-style:italic># Check that nationality is one of the options (underscore implements &#34;any&#34;)</span>
+    <span style=color:#000>nationality_options</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;GB&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;US&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>nationality</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>nationality_options</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+
+    <span style=color:#8f5902;font-style:italic># Check that work_effort is one of the options (underscore implements &#34;any&#34;)</span>
+    <span style=color:#000>work_options</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;DetailedDesign&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;Simulation&#34;</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>user</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>work_effort</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>work_options</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

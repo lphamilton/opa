@@ -1,0 +1,280 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="Kafka Authorization"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/kafka-authorization/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/kafka-authorization/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Kafka Authorization</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#goals>Goals</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#steps>Steps</a><ul><li><a href=#1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</a><ul><li><a href=#authentication>Authentication</a></li><li><a href=#kafka-authorizer-jar-file>Kafka Authorizer JAR File</a></li></ul></li><li><a href=#2-define-a-policy-to-restrict-consumer-access-to-topics-containing-personally-identifiable-information-pii>2. Define a policy to restrict consumer access to topics containing Personally Identifiable Information (PII).</a></li><li><a href=#3-exercise-the-policy-that-restricts-consumer-access-to-topics-containing-pii>3. Exercise the policy that restricts consumer access to topics containing PII.</a></li><li><a href=#4-extend-the-policy-to-prevent-services-from-accidentally-writing-to-topics-with-large-fanout>4. Extend the policy to prevent services from accidentally writing to topics with large fanout.</a></li><li><a href=#5-exercise-the-policy-that-restricts-producer-access-to-topics-with-high-fanout>5. Exercise the policy that restricts producer access to topics with high fanout.</a></li></ul></li><li><a href=#wrap-up>Wrap Up</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Kafka Authorization</p></div></section><section class=section><div class=content><p><a href=https://kafka.apache.org/>Apache Kafka</a> is a high-performance distributed
+streaming platform deployed by thousands of companies. In many deployments,
+administrators require fine-grained access control over Kafka topics to
+enforce important requirements around confidentiality and integrity.</p><h2 id=goals>Goals</h2><p>This tutorial shows how to enforce fine-grained access control over Kafka
+topics. In this tutorial you will use OPA to define and enforce an
+authorization policy stating:</p><ul><li>Consumers of topics containing Personally Identifiable Information (PII) must be whitelisted.</li><li>Producers to topics with <em>high fanout</em> must be whitelisted.</li></ul><p>In addition, this tutorial shows how to break up a policy with small helper
+rules to reuse logic and improve overall readability.</p><h2 id=prerequisites>Prerequisites</h2><p>This tutorial requires <a href=https://docs.docker.com/compose/install/>Docker Compose</a> to run Kafka, ZooKeeper, and OPA.</p><h2 id=steps>Steps</h2><h3 id=1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</h3><p>First, create an OPA policy that allows all requests. You will update this policy later in the tutorial.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mkdir -p policies</code></pre></div><p><strong>policies/tutorial.rego</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>kafka</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>true</span></code></pre></div><p>Next, create a <code>docker-compose.yaml</code> file that runs OPA, ZooKeeper, and Kafka.</p><p><strong>docker-compose.yaml</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;2&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>services<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>hostname<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># WARNING: OPA is NOT running with an authorization policy configured. This</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># means that clients can read and write policies in OPA. If you are deploying</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># OPA in an insecure environment, you should configure authentication and</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># authorization on the daemon. See the Security page for details:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># https://www.openpolicyagent.org/docs/security.html.</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>command<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;run --server --watch /policies&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>volumes<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>./policies<span style=color:#000;font-weight:700>:</span>/policies<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>zookeeper<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>confluentinc/cp-zookeeper<span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>4.0</span>.<span style=color:#0000cf;font-weight:700>0</span>-<span style=color:#0000cf;font-weight:700>3</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>environment<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>ZOOKEEPER_CLIENT_PORT<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>2181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>zk_id<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;1&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>kafka<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>hostname<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>kafka<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/demo-kafka<span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>1.0</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>links<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>zookeeper<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;9092:9092&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>environment<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;1&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_ZOOKEEPER_CONNECT<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;zookeeper:2181&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_ADVERTISED_LISTENERS<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;SSL://:9093&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SECURITY_INTER_BROKER_PROTOCOL<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>SSL<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_CLIENT_AUTH<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>required<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_KEYSTORE_FILENAME<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>kafka.broker.keystore.jks<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_KEYSTORE_CREDENTIALS<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>broker_keystore_creds<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_KEY_CREDENTIALS<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>broker_sslkey_creds<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_TRUSTSTORE_FILENAME<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>kafka.broker.truststore.jks<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_SSL_TRUSTSTORE_CREDENTIALS<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>broker_truststore_creds<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_AUTHORIZER_CLASS_NAME<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>com.lbg.kafka.opa.OpaAuthorizer<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OPA_AUTHORIZER_URL<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;http://opa:8181/v1/data/kafka/authz/allow&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OPA_AUTHORIZER_ALLOW_ON_ERROR<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;false&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OPA_AUTHORIZER_CACHE_INITIAL_CAPACITY<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>100</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OPA_AUTHORIZER_CACHE_MAXIMUM_SIZE<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>100</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>KAFKA_OPA_AUTHORIZER_CACHE_EXPIRE_AFTER_MS<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>600000</span></code></pre></div><p>For more information on how to configure the OPA plugin for Kafka, see the <a href=https://github.com/open-policy-agent/contrib>github.com/open-policy-agent/contrib</a>
+repository.</p><p>Once you have created the file, launch the containers for this tutorial.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker-compose --project-name opa-kafka-tutorial up</code></pre></div><p>Now that the tutorial environment is running, we can define an authorization policy using OPA and test it.</p><h4 id=authentication>Authentication</h4><p>The Docker Compose file defined above requires <strong>SSL client authentication</strong>
+for clients that connect to the broker. Enabling SSL client authentication
+allows for service identities to be provided as input to your policy. The
+example below shows the input structure.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;operation&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Write&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#204a87;font-weight:700>&#34;resource&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;resourceType&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Topic&#34;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;credit-scores&#34;</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#204a87;font-weight:700>&#34;session&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;principal&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+      <span style=color:#204a87;font-weight:700>&#34;principalType&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;User&#34;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#000;font-weight:700>},</span>
+    <span style=color:#204a87;font-weight:700>&#34;clientAddress&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;172.21.0.5&#34;</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#204a87;font-weight:700>&#34;sanitizedUser&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;CN%3Danon_producer.tutorial.openpolicyagent.org%2COU%3DTUTORIAL%2CO%3DOPA%2CL%3DSF%2CST%3DCA%2CC%3DUS&#34;</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>The client identity is extracted from the SSL certificates that clients
+present when they connect to the broker. The client identity information is
+encoded in the <code>input.session.sanitizedUser</code> field. This field can be decoded
+inside the policy.</p><p>Generating SSL certificates and JKS files required for SSL client
+authentication is outside the scope of this tutorial. To simplify the steps
+below, the Docker Compose file uses an extended version of the
+<a href=https://hub.docker.com/r/confluentinc/cp-kafka/>confluentinc/cp-kafka</a>
+image from Docker Hub. The extended image includes <strong>pre-generated SSL
+certificates</strong> that the broker and clients use to identify themselves.</p><p>Do not rely on these pre-generated SSL certificates in real-world scenarios.
+They are only provided for convenience/test purposes.</p><h4 id=kafka-authorizer-jar-file>Kafka Authorizer JAR File</h4><p>The Kafka image used in this tutorial includes a pre-installed JAR file that implements the <a href=https://kafka.apache.org/documentation/#security_authz>Kafka Authorizer</a> interface. For more information on the authorizer see <a href=https://github.com/open-policy-agent/contrib/tree/master/kafka_authorizer>open-policy-agent/contrib/kafka_authorizer</a>.</p><h3 id=2-define-a-policy-to-restrict-consumer-access-to-topics-containing-personally-identifiable-information-pii>2. Define a policy to restrict consumer access to topics containing Personally Identifiable Information (PII).</h3><p>Update the <code>policies/tutorial.rego</code> with the following content.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+<span style=color:#8f5902;font-style:italic># High level policy for controlling access to Kafka.</span>
+<span style=color:#8f5902;font-style:italic>#</span>
+<span style=color:#8f5902;font-style:italic># * Deny operations by default.</span>
+<span style=color:#8f5902;font-style:italic># * Allow operations if no explicit denial.</span>
+<span style=color:#8f5902;font-style:italic>#</span>
+<span style=color:#8f5902;font-style:italic># The kafka-authorizer-opa plugin will query OPA for decisions at</span>
+<span style=color:#8f5902;font-style:italic># /kafka/authz/allow. If the policy decision is _true_ the request is allowed.</span>
+<span style=color:#8f5902;font-style:italic># If the policy decision is _false_ the request is denied.</span>
+<span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+<span style=color:#000>package</span> <span style=color:#000>kafka</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>authz</span>
+
+<span style=color:#000>default</span> <span style=color:#000>allow</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>
+
+<span style=color:#000>allow</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>deny</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>deny</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>is_read_operation</span>
+	<span style=color:#000>topic_contains_pii</span>
+	<span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>consumer_is_whitelisted_for_pii</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+<span style=color:#8f5902;font-style:italic># Data structures for controlling access to topics. In real-world deployments,</span>
+<span style=color:#8f5902;font-style:italic># these data structures could be loaded into OPA as raw JSON data. The JSON</span>
+<span style=color:#8f5902;font-style:italic># data could be pulled from external sources like AD, Git, etc.</span>
+<span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+
+<span style=color:#000>consumer_whitelist</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;pii&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;pii_consumer&#34;</span><span style=color:#000;font-weight:700>}}</span>
+
+<span style=color:#000>topic_metadata</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;credit-scores&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;tags&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;pii&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>}}</span>
+
+<span style=color:#8f5902;font-style:italic>#-----------------------------------</span>
+<span style=color:#8f5902;font-style:italic># Helpers for checking topic access.</span>
+<span style=color:#8f5902;font-style:italic>#-----------------------------------</span>
+
+<span style=color:#000>topic_contains_pii</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>topic_metadata</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>topic_name</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>tags</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;pii&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>consumer_is_whitelisted_for_pii</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>consumer_whitelist</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>pii</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>principal</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+<span style=color:#8f5902;font-style:italic># Helpers for processing Kafka operation input. This logic could be split out</span>
+<span style=color:#8f5902;font-style:italic># into a separate file and shared. For conciseness, we have kept it all in one</span>
+<span style=color:#8f5902;font-style:italic># place.</span>
+<span style=color:#8f5902;font-style:italic>#-----------------------------------------------------------------------------</span>
+
+<span style=color:#000>is_write_operation</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>operation</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;Write&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>is_read_operation</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>operation</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;Read&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>is_topic_resource</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>resource</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>resourceType</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;Topic&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>topic_name</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>resource</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>is_topic_resource</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>principal</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;fqn&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>parsed</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>CN</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>cn_parts</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#0000cf;font-weight:700>0</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>}</span> <span style=color:#000;font-weight:700>{</span>
+	<span style=color:#000>parsed</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>parse_user</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>urlquery</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>decode</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>session</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>sanitizedUser</span><span style=color:#000;font-weight:700>))</span>
+	<span style=color:#000>cn_parts</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87>split</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>parsed</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>CN</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;.&#34;</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>parse_user</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>user</span><span style=color:#000;font-weight:700>)</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>key</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>value</span> <span style=color:#ce5c00;font-weight:700>|</span>
+	<span style=color:#000>parts</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87>split</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>user</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;,&#34;</span><span style=color:#000;font-weight:700>)</span>
+	<span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>key</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>value</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87>split</span><span style=color:#000;font-weight:700>(</span><span style=color:#000>parts</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;=&#34;</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>The <code>./policies</code> directory is mounted into the Docker container running OPA.
+When the files under this directory change, OPA is notified and the policies
+are automatically reloaded.</p><p>At this point, you can exercise the policy.</p><h3 id=3-exercise-the-policy-that-restricts-consumer-access-to-topics-containing-pii>3. Exercise the policy that restricts consumer access to topics containing PII.</h3><p>This step shows how you can grant fine-grained access to services using
+Kafka. In this scenario, some services are allowed to read PII data while
+others are not.</p><p>First, run <code>kafka-console-producer</code> to generate some data on the
+<code>credit-scores</code> topic.</p><blockquote><p>This tutorial uses the <code>kafka-console-producer</code> and <code>kafka-console-consumer</code> scripts to generate and display Kafka messages. These scripts read from STDIN and write to STDOUT and are frequently used to send and receive data via Kafka over the command line. If you are not familiar with these scripts you can learn more in Kafka&rsquo;s <a href=https://kafka.apache.org/documentation/#quickstart>Quick Start</a> documentation.</p></blockquote><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    bash -c <span style=color:#4e9a06>&#39;for i in {1..10}; do echo &#34;{\&#34;user\&#34;: \&#34;bob\&#34;, \&#34;score\&#34;: $i}&#34;; done | kafka-console-producer --topic credit-scores --broker-list kafka:9093 -producer.config /etc/kafka/secrets/anon_producer.ssl.config&#39;</span></code></pre></div><p>This command will send 10 messages to the <code>credit-scores</code> topic. Bob&rsquo;s credit
+score seems to be improving.</p><p>Next, run <code>kafka-console-consumer</code> and try to read data off the topic. Use
+the <code>pii_consumer</code> credentials to simulate a service that is allowed to read
+PII data.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    kafka-console-consumer --bootstrap-server kafka:9093 --topic credit-scores --from-beginning --consumer.config /etc/kafka/secrets/pii_consumer.ssl.config</code></pre></div><p>This command will output the 10 messages sent to the topic in the first part
+of this step. Once the 10 messages have been printed, exit out of the script
+(^C).</p><p>Finally, run <code>kafka-console-consumer</code> again but this time try to use the
+<code>anon_consumer</code> credentials. The <code>anon_consumer</code> credentials simulate a
+service that has <strong>not</strong> been explicitly granted access to PII data.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    kafka-console-consumer --bootstrap-server kafka:9093 --topic credit-scores --from-beginning --consumer.config /etc/kafka/secrets/anon_consumer.ssl.config</code></pre></div><p>Because the <code>anon_consumer</code> is not allowed to read PII data, the request will
+be denied and the consumer will output an error message.</p><pre><code>Not authorized to read from topic credit-scores.
+...
+Processed a total of 0 messages
+</code></pre><h3 id=4-extend-the-policy-to-prevent-services-from-accidentally-writing-to-topics-with-large-fanout>4. Extend the policy to prevent services from accidentally writing to topics with large fanout.</h3><p>First, add the following content to the policy file (<code>./policies/tutorial.rego</code>):</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>deny</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>is_write_operation</span>
+  <span style=color:#000>topic_has_large_fanout</span>
+  <span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>producer_is_whitelisted_for_large_fanout</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>producer_whitelist</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#4e9a06>&#34;large-fanout&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;fanout_producer&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>topic_has_large_fanout</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>topic_metadata</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>topic_name</span><span style=color:#ce5c00;font-weight:700>].</span><span style=color:#000>tags</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;large-fanout&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>producer_is_whitelisted_for_large_fanout</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#000>producer_whitelist</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;large-fanout&#34;</span><span style=color:#ce5c00;font-weight:700>][</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#000>principal</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>name</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>Next, update the <code>topic_metadata</code> data structure in the same file to indicate
+that the <code>click-stream</code> topic has a high fanout.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>topic_metadata</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#4e9a06>&#34;click-stream&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;tags&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;large-fanout&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#000;font-weight:700>},</span>
+  <span style=color:#4e9a06>&#34;credit-scores&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;tags&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;pii&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><h3 id=5-exercise-the-policy-that-restricts-producer-access-to-topics-with-high-fanout>5. Exercise the policy that restricts producer access to topics with high fanout.</h3><p>First, run <code>kafka-console-producer</code> and simulate a service with access to the
+<code>click-stream</code> topic.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    bash -c <span style=color:#4e9a06>&#39;for i in {1..10}; do echo &#34;{\&#34;user\&#34;: \&#34;alice\&#34;, \&#34;button\&#34;: $i}&#34;; done | kafka-console-producer --topic click-stream --broker-list kafka:9093 -producer.config /etc/kafka/secrets/fanout_producer.ssl.config&#39;</span></code></pre></div><p>Next, run the <code>kafka-console-consumer</code> to confirm that the messages were published.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    kafka-console-consumer --bootstrap-server kafka:9093 --topic click-stream --from-beginning --consumer.config /etc/kafka/secrets/anon_consumer.ssl.config</code></pre></div><p>Once you see the 10 messages produced by the first part of this step, exit the console consumer (^C).</p><p>Lastly, run <code>kafka-console-producer</code> to simulate a service that should <strong>not</strong>
+have access to <em>high fanout</em> topics.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --rm --network opakafkatutorial_default <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    openpolicyagent/demo-kafka:1.0 <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    bash -c <span style=color:#4e9a06>&#39;echo &#34;{\&#34;user\&#34;: \&#34;alice\&#34;, \&#34;button\&#34;: \&#34;bogus\&#34;}&#34; | kafka-console-producer --topic click-stream --broker-list kafka:9093 -producer.config /etc/kafka/secrets/anon_producer.ssl.config&#39;</span></code></pre></div><p>Because <code>anon_producer</code> is not authorized to write to high fanout topics, the
+request will be denied and the producer will output an error message.</p><pre><code>Not authorized to access topics: [click-stream]
+</code></pre><h2 id=wrap-up>Wrap Up</h2><p>Congratulations for finishing the tutorial!</p><p>At this point you have learned how to enforce fine-grained access control
+over Kafka topics. In addition, you have seen how to break down policies into
+smaller rules that can be reused and improve the overall readability over the
+policy.</p><p>If you want to use the Kafka Authorizer plugin that integrates Kafka with
+OPA, see the build and install instructions in the
+<a href=https://github.com/open-policy-agent/contrib>github.com/open-policy-agent/contrib</a>
+repository.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

@@ -1,0 +1,186 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content=Deployments><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/deployments/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/deployments/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Deployments</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/deployments/>Deployments</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#docker>Docker</a><ul><li><a href=#running-with-docker>Running with Docker</a><ul><li><a href=#logging>Logging</a></li><li><a href=#volume-mounts>Volume Mounts</a></li><li><a href=#code-pwd-example-data-json-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-docker-example-data-json-code><code>$PWD/example/<a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-docker/example/data.json>data.json</a></code></a></li><li><a href=#code-pwd-example-policy-rego-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-docker-example-data-json-deployments-docker-example-policy-rego-code><code>$PWD/example/<a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-docker/example/data.json/deployments-docker/example/policy.rego>policy.rego</a></code></a></li><li><a href=#more-information>More Information</a></li></ul></li><li><a href=#tagging>Tagging</a></li></ul></li><li><a href=#kubernetes>Kubernetes</a><ul><li><a href=#kicking-the-tires>Kicking the Tires</a><ul><li><a href=#example-rego-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-example-rego><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/example.rego><code>example.rego</code></a></a></li><li><a href=#service-opa-yaml-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-service-opa-yaml><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/service-opa.yaml><code>service-opa.yaml</code></a></a></li><li><a href=#example-pod-json-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-example-pod-json><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/example-pod.json><code>example-pod.json</code></a></a></li></ul></li></ul></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Deployments</p></div></section><section class=section><div class=content><p>This document helps you get OPA up and running in different deployment
+environments. You should read this document if you are planning to deploy OPA.</p><h2 id=docker>Docker</h2><p>Docker makes OPA easy to deploy in different types of environments.</p><p>This section explains how to use the official OPA Docker images. If this is your
+first time deploying OPA and you plan to use one of the Docker images, we
+recommend you review this section to familiarize yourself with the basics.</p><p>OPA releases are available as images on Docker Hub.</p><ul><li><a href=https://hub.docker.com/r/openpolicyagent/opa/>openpolicyagent/opa:0.10.7</a></li></ul><h3 id=running-with-docker>Running with Docker</h3><p>If you start OPA outside of Docker without any arguments, it prints a list of
+available commands. By default, the official OPA Docker image executes the <code>run</code>
+command which starts an instance of OPA as an interactive shell. This is nice
+for development, however, for deployments, we want to run OPA as a server.</p><p>The <code>run</code> command accepts a <code>--server</code> (or <code>-s</code>) flag that starts OPA as a
+server. See <code>--help</code> for more information on other arguments. The most important
+command line arguments for OPA&rsquo;s server mode are:</p><ul><li><code>--addr</code> to set the listening address (default: <code>0.0.0.0:8181</code>).</li><li><code>--log-level</code> (or <code>-l</code>) to set the log level (default: <code>&quot;info&quot;</code>).</li><li><code>--log-format</code> to set the log format (default: <code>&quot;text&quot;</code>).</li></ul><p>By default, OPA listens for normal HTTP connections on <code>0.0.0.0:8181</code>. To make
+OPA listen for HTTPS connections, see <a href=../security>Security</a>.</p><p>We can run OPA as a server using Docker:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run -p <span style=color:#0000cf;font-weight:700>8181</span>:8181 openpolicyagent/opa <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>    run --server --log-level debug</code></pre></div><p>Test that OPA is available:</p><pre><code>curl -i localhost:8181/
+</code></pre><h4 id=logging>Logging</h4><p>OPA logs to stderr and the level can be set with <code>--log-level/-l</code>. The default log level is <code>info</code> which causes OPA to log request/response headers.</p><pre><code>time=&quot;20.7.13-12T03:03:23Z&quot; level=info msg=&quot;First line of log stream.&quot; addr=&quot;:8181&quot;
+time=&quot;20.7.13-12T03:03:30Z&quot; level=debug msg=&quot;Received request.&quot; client_addr=&quot;172.17.0.1:60952&quot; req_body= req_id=1 req_method=GET req_params=map[] req_path=&quot;/v1/data&quot;
+time=&quot;20.7.13-12T03:03:30Z&quot; level=debug msg=&quot;Sent response.&quot; client_addr=&quot;172.17.0.1:60952&quot; req_id=1 req_method=GET req_path=&quot;/v1/data&quot; resp_bytes=13 resp_duration=0.402793 resp_status=200
+</code></pre><p>If the log level is set to <code>debug</code> the request and response message bodies will be logged. This is useful for development however it can be expensive in production.</p><pre><code>time=&quot;20.7.15-16T00:09:24Z&quot; level=info msg=&quot;Received request.&quot; client_addr=&quot;172.17.0.1:42164&quot; req_body=&quot;{&quot;input&quot;: &quot;hello&quot;}&quot; req_id=1 req_method=POST req_params=map[] req_path=&quot;/v1/data&quot;
+time=&quot;20.7.15-16T00:09:24Z&quot; level=info msg=&quot;Sent response.&quot; client_addr=&quot;172.17.0.1:42164&quot; req_id=1 req_method=POST req_path=&quot;/v1/data&quot; resp_body=&quot;{&quot;result&quot;:{&quot;example&quot;:{&quot;message&quot;:&quot;world&quot;}}}&quot; resp_bytes=42 resp_duration=0.618689 resp_status=200
+</code></pre><p>The default log format is text-based and intended for development. For
+production, enable JSON formatting with <code>--log-format json</code>:</p><pre><code>{&quot;client_addr&quot;:&quot;[::1]:64427&quot;,&quot;level&quot;:&quot;debug&quot;,&quot;msg&quot;:&quot;Received request.&quot;,&quot;req_body&quot;:&quot;&quot;,&quot;req_id&quot;:1,&quot;req_method&quot;:&quot;GET&quot;,&quot;req_params&quot;:{},&quot;req_path&quot;:&quot;/v1/data&quot;,&quot;time&quot;:&quot;20.7.13-11T18:22:18-08:00&quot;}
+{&quot;client_addr&quot;:&quot;[::1]:64427&quot;,&quot;level&quot;:&quot;debug&quot;,&quot;msg&quot;:&quot;Sent response.&quot;,&quot;req_id&quot;:1,&quot;req_method&quot;:&quot;GET&quot;,&quot;req_path&quot;:&quot;/v1/data&quot;,&quot;resp_bytes&quot;:13,&quot;resp_duration&quot;:0.392554,&quot;resp_status&quot;:200,&quot;time&quot;:&quot;20.7.13-11T18:22:18-08:00&quot;}
+</code></pre><h4 id=volume-mounts>Volume Mounts</h4><p>By default, OPA does not include any data or policies.</p><p>The simplest way to load data and policies into OPA is to provide them via the
+file system as command line arguments. When running inside Docker, you can
+provide files via volume mounts.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run -v <span style=color:#000>$PWD</span>:/example openpolicyagent/opa <span style=color:#204a87>eval</span> --data /example <span style=color:#4e9a06>&#39;data.example.greeting&#39;</span></code></pre></div><h4 id=code-pwd-example-data-json-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-docker-example-data-json-code><code>$PWD/example/<a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-docker/example/data.json>data.json</a></code></h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;hostOS&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;$(uname)&#34;</span>
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></div><h4 id=code-pwd-example-policy-rego-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-docker-example-data-json-deployments-docker-example-policy-rego-code><code>$PWD/example/<a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-docker/example/data.json/deployments-docker/example/policy.rego>policy.rego</a></code></h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>example</span>
+
+<span style=color:#000>greeting</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>msg</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>concat</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#ce5c00;font-weight:700>[</span><span style=color:#4e9a06>&#34;Hello &#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>example</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>hostOS</span><span style=color:#000;font-weight:700>,</span> <span style=color:#4e9a06>&#34;!&#34;</span><span style=color:#ce5c00;font-weight:700>]</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>msg</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span>
+
+</code></pre></div><h4 id=more-information>More Information</h4><p>For more information on OPA&rsquo;s command line, see <code>--help</code>:</p><pre><code>docker run openpolicyagent/opa run --help
+</code></pre><h3 id=tagging>Tagging</h3><p>The Docker Hub repository contains tags for every release of OPA. For more
+information on each release see the <a href=https://github.com/open-policy-agent/opa/releases>GitHub
+Releases</a> page.</p><p>The &ldquo;latest&rdquo; tag refers to the most recent release. The latest tag is convenient
+if you want to quickly try out OPA however for production deployments, we
+recommend using an explicit version tag.</p><p>Development builds are also available on Docker Hub. For each version the
+<code>{version}-dev</code> tag refers the most recent development build for that version.</p><p>The version information is contained in the OPA executable itself. You can check
+the version with the following command:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run openpolicyagent/opa version</code></pre></div><h2 id=kubernetes>Kubernetes</h2><h3 id=kicking-the-tires>Kicking the Tires</h3><p>This section shows how to quickly deploy OPA on top of Kubernetes to try it out.</p><blockquote><p>These steps assume Kubernetes is deployed with
+<a href=https://github.com/kubernetes/minikube>minikube</a>. If you are using a different
+Kubernetes provider, the steps should be similar. You may need to use a
+different Service configuration at the end.</p></blockquote><p>First, create a ConfigMap containing a test policy. The test policy will define a blacklist that rejects:</p><ul><li>Objects missing a &lsquo;customer&rsquo; label.</li><li>Pods referring to images outside the corporate registry.</li></ul><p>In this case, the policy file does not contain sensitive information so it&rsquo;s
+fine to store as a ConfigMap. If the file contained sensitive information, then
+we recommend you store it as a Secret.</p><h4 id=example-rego-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-example-rego><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/example.rego><code>example.rego</code></a></h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#000>example</span>
+
+<span style=color:#000>default</span> <span style=color:#000>deny</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#204a87;font-weight:700>false</span>
+
+<span style=color:#8f5902;font-style:italic># Reject objects without a customer label.</span>
+<span style=color:#000>deny</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>metadata</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>labels</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>customer</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#8f5902;font-style:italic># Reject pods referring to images outside the corporate registry.</span>
+<span style=color:#000>deny</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>kind</span> <span style=color:#ce5c00;font-weight:700>==</span> <span style=color:#4e9a06>&#34;Pod&#34;</span>
+    <span style=color:#000>container</span> <span style=color:#000;font-weight:700>:</span><span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>input</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>spec</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>containers</span><span style=color:#ce5c00;font-weight:700>[</span><span style=color:#000>_</span><span style=color:#ce5c00;font-weight:700>]</span>
+    <span style=color:#204a87;font-weight:700>not</span> <span style=color:#000>re_match</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;^registry.acmecorp.com/.+$&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>container</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>image</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>kubectl create configmap example-policy --from-file example.rego</code></pre></div><p>Next, create a Deployment to run OPA. The ConfigMap containing the policy is
+volume mounted into the container. This allows OPA to load the policy from
+the file system.</p><p><strong><code>deployment-opa.yaml</code></strong>:</p><pre><code>apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: opa
+  labels:
+    app: opa
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: opa
+      name: opa
+    spec:
+      containers:
+      - name: opa
+        image: openpolicyagent/opa:0.10.7
+        ports:
+        - name: http
+          containerPort: 8181
+        args:
+        - &quot;run&quot;
+        - &quot;--ignore=.*&quot;  # exclude hidden dirs created by Kubernetes
+        - &quot;--server&quot;
+        - &quot;/policies&quot;
+        volumeMounts:
+        - readOnly: true
+          mountPath: /policies
+          name: example-policy
+      volumes:
+      - name: example-policy
+        configMap:
+          name: example-policy
+</code></pre><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>kubectl create -f deployment-opa.yaml</code></pre></div><p>At this point OPA is up and running. Create a Service to expose the OPA API so
+that you can query it:</p><h4 id=service-opa-yaml-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-service-opa-yaml><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/service-opa.yaml><code>service-opa.yaml</code></a></h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Service<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>metadata<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>labels<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>app<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>spec<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>type<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>NodePort<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>selector<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>app<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>http<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>protocol<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>TCP<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>port<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>targetPort<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>8181</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>kubectl create -f service-opa.yaml</code></pre></div><p>Get the URL of OPA using <code>minikube</code>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#000>OPA_URL</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#204a87;font-weight:700>$(</span>minikube service opa --url<span style=color:#204a87;font-weight:700>)</span></code></pre></div><p>Now you can query OPA&rsquo;s API. If you use the Pod below, <code>deny</code> will be <code>true</code>
+because the Pod refers to image outside the corporate registry.</p><h4 id=example-pod-json-https-github-com-open-policy-agent-opa-tree-master-docs-code-deployments-kubernetes-example-pod-json><a href=https://github.com/open-policy-agent/opa/tree/master/docs/code/deployments-kubernetes/example-pod.json><code>example-pod.json</code></a></h4><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+    <span style=color:#204a87;font-weight:700>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#204a87;font-weight:700>&#34;kind&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;Pod&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;apiVersion&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;v1&#34;</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#204a87;font-weight:700>&#34;metadata&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span><span style=color:#000;font-weight:700>,</span>
+            <span style=color:#204a87;font-weight:700>&#34;labels&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+                <span style=color:#204a87;font-weight:700>&#34;customer&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;example.org&#34;</span>
+            <span style=color:#000;font-weight:700>}</span>
+        <span style=color:#000;font-weight:700>},</span>
+        <span style=color:#204a87;font-weight:700>&#34;spec&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+            <span style=color:#204a87;font-weight:700>&#34;containers&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>[</span>
+                <span style=color:#000;font-weight:700>{</span>
+                    <span style=color:#204a87;font-weight:700>&#34;name&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;opa&#34;</span><span style=color:#000;font-weight:700>,</span>
+                    <span style=color:#204a87;font-weight:700>&#34;image&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;openpolicyagent/opa&#34;</span>
+                <span style=color:#000;font-weight:700>}</span>
+            <span style=color:#000;font-weight:700>]</span>
+        <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>curl <span style=color:#000>$OPA_URL</span>/v1/data -d @example-pod.json</code></pre></div><p>If you update the image to refer to the corporate registry, <code>deny</code> will be
+<code>false</code>.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

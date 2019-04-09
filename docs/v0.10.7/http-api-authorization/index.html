@@ -1,0 +1,205 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="HTTP API Authorization"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/http-api-authorization/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/http-api-authorization/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | HTTP API Authorization</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#goals>Goals</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#steps>Steps</a><ul><li><a href=#1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</a></li><li><a href=#2-load-a-policy-into-opa>2. Load a policy into OPA.</a></li><li><a href=#3-check-that-alice-can-see-her-own-salary>3. Check that <code>alice</code> can see her own salary.</a></li><li><a href=#4-check-that-bob-can-see-alice-s-salary-because-bob-is-alice-s-manager>4. Check that <code>bob</code> can see <code>alice</code>&rsquo;s salary (because <code>bob</code> is <code>alice</code>&rsquo;s manager.)</a></li><li><a href=#5-check-that-bob-cannot-see-charlie-s-salary>5. Check that <code>bob</code> CANNOT see <code>charlie</code>&rsquo;s salary.</a></li><li><a href=#6-change-the-policy>6. Change the policy.</a></li><li><a href=#7-check-that-the-new-policy-works>7. Check that the new policy works.</a></li><li><a href=#8-optional-use-json-web-tokens-to-communicate-policy-data>8. (Optional) Use JSON Web Tokens to communicate policy data.</a></li></ul></li><li><a href=#wrap-up>Wrap Up</a></li></ul></li></ul></nav></div><a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">HTTP API Authorization</p></div></section><section class=section><div class=content><p>Anything that exposes an HTTP API (whether an individual microservice or an application as a whole) needs to control who can run those APIs and when. OPA makes it easy to write fine-grained, context-aware policies to implement API authorization.</p><h2 id=goals>Goals</h2><p>In this tutorial, you&rsquo;ll use a simple HTTP web server that accepts any HTTP GET
+request that you issue and echoes the OPA decision back as text. Both OPA and
+the web server will be run as containers.</p><p>For this tutorial, our desired policy is:</p><ul><li>People can see their own salaries (<code>GET /finance/salary/{user}</code> is permitted for <code>{user}</code>)</li><li>A manager can see their direct reports&rsquo; salaries (<code>GET /finance/salary/{user}</code> is permitted for <code>{user}</code>&rsquo;s manager)</li></ul><h2 id=prerequisites>Prerequisites</h2><p>This tutorial requires <a href=https://docs.docker.com/compose/install/>Docker Compose</a> to run a demo web server along with OPA.</p><h2 id=steps>Steps</h2><h3 id=1-bootstrap-the-tutorial-environment-using-docker-compose>1. Bootstrap the tutorial environment using Docker Compose.</h3><p>First, create a <code>docker-compose.yml</code> file that runs OPA and the demo web server.</p><p><strong>docker-compose.yml</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#39;2&#39;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>services<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/opa<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># WARNING: OPA is NOT running with an authorization policy configured. This</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># means that clients can read and write policies in OPA. If you are</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># deploying OPA in an insecure environment, be sure to configure</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># authentication and authorization on the daemon. See the Security page for</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span><span style=color:#8f5902;font-style:italic># details: https://www.openpolicyagent.org/docs/security.html.</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>command<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;run&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;--server&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;--log-level=debug&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>api_server<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>openpolicyagent/demo-restful-api<span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>0.2</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>ports<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>5000</span><span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>5000</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>environment<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>OPA_ADDR=http<span style=color:#000;font-weight:700>:</span>//opa<span style=color:#000;font-weight:700>:</span><span style=color:#0000cf;font-weight:700>8181</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>POLICY_PATH=/v1/data/httpapi/authz</code></pre></div><p>Then run <code>docker-compose</code> to pull and run the containers.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>docker-compose -f docker-compose.yml up</code></pre></div><p>Every time the demo web server receives an HTTP request, it
+asks OPA to decide whether an HTTP API is authorized or not
+using a single RESTful API call. An example code is <a href=https://github.com/open-policy-agent/contrib/blob/master/api_authz/docker/echo_server.py>here</a>,
+but the crux of the (Python) code is shown below.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#8f5902;font-style:italic># Grab basic information. We assume user is passed on a form.</span>
+<span style=color:#000>http_api_user</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>request</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>form</span><span style=color:#000;font-weight:700>[</span><span style=color:#4e9a06>&#39;user&#39;</span><span style=color:#000;font-weight:700>]</span>
+
+<span style=color:#8f5902;font-style:italic># Get the path as a list (removing leading and trailing /)</span>
+<span style=color:#8f5902;font-style:italic># Example: &#34;/finance/salary/&#34; will become [&#34;finance&#34;, &#34;salary&#34;]</span>
+<span style=color:#000>http_api_path_list</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>request</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>path</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>strip</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;/&#34;</span><span style=color:#000;font-weight:700>)</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>split</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;/&#34;</span><span style=color:#000;font-weight:700>)</span>
+
+<span style=color:#000>input_dict</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>  <span style=color:#8f5902;font-style:italic># create input to hand to OPA</span>
+    <span style=color:#4e9a06>&#34;input&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;user&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>http_api_user</span><span style=color:#000;font-weight:700>,</span>
+        <span style=color:#4e9a06>&#34;path&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>http_api_path_list</span><span style=color:#000;font-weight:700>,</span> <span style=color:#8f5902;font-style:italic># Ex: [&#34;finance&#34;, &#34;salary&#34;, &#34;alice&#34;]</span>
+        <span style=color:#4e9a06>&#34;method&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>request</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>method</span>  <span style=color:#8f5902;font-style:italic># HTTP verb, e.g. GET, POST, PUT, ...</span>
+    <span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+<span style=color:#8f5902;font-style:italic># ask OPA for a policy decision</span>
+<span style=color:#8f5902;font-style:italic># (in reality OPA URL would be constructed from environment)</span>
+<span style=color:#000>rsp</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>requests</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>post</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;http://127.0.0.1:8181/v1/data/httpapi/authz&#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>json</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>input_dict</span><span style=color:#000;font-weight:700>)</span>
+<span style=color:#204a87;font-weight:700>if</span> <span style=color:#000>rsp</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>json</span><span style=color:#000;font-weight:700>()[</span><span style=color:#4e9a06>&#34;allow&#34;</span><span style=color:#000;font-weight:700>]:</span>
+  <span style=color:#8f5902;font-style:italic># HTTP API allowed</span>
+<span style=color:#204a87;font-weight:700>else</span><span style=color:#000;font-weight:700>:</span>
+  <span style=color:#8f5902;font-style:italic># HTTP API denied</span></code></pre></div><h3 id=2-load-a-policy-into-opa>2. Load a policy into OPA.</h3><p>In another terminal, create a policy that allows users to
+request their own salary as well as the salary of their direct subordinates.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;example.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package httpapi.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># bob is alice&#39;s manager, and betty is charlie&#39;s.
+</span><span style=color:#4e9a06>subordinates = {&#34;alice&#34;: [], &#34;charlie&#34;: [], &#34;bob&#34;: [&#34;alice&#34;], &#34;betty&#34;: [&#34;charlie&#34;]}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># HTTP API request
+</span><span style=color:#4e9a06>import input
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow users to get their own salaries.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, username]
+</span><span style=color:#4e9a06>  input.user == username
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow managers to get their subordinates&#39; salaries.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, username]
+</span><span style=color:#4e9a06>  subordinates[input.user][_] == username
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Then load the policy via OPA&rsquo;s REST API.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @example.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/example</code></pre></div><h3 id=3-check-that-alice-can-see-her-own-salary>3. Check that <code>alice</code> can see her own salary.</h3><p>The following command will succeed.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user alice:password localhost:5000/finance/salary/alice</code></pre></div><h3 id=4-check-that-bob-can-see-alice-s-salary-because-bob-is-alice-s-manager>4. Check that <code>bob</code> can see <code>alice</code>&rsquo;s salary (because <code>bob</code> is <code>alice</code>&rsquo;s manager.)</h3><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user bob:password localhost:5000/finance/salary/alice</code></pre></div><h3 id=5-check-that-bob-cannot-see-charlie-s-salary>5. Check that <code>bob</code> CANNOT see <code>charlie</code>&rsquo;s salary.</h3><p><code>bob</code> is not <code>charlie</code>&rsquo;s manager, so the following command will fail.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user bob:password localhost:5000/finance/salary/charlie</code></pre></div><h3 id=6-change-the-policy>6. Change the policy.</h3><p>Suppose the organization now includes an HR department. The organization wants
+members of HR to be able to see any salary. Let&rsquo;s extend the policy to handle
+this.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;example-hr.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package httpapi.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>import input
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow HR members to get anyone&#39;s salary.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, _]
+</span><span style=color:#4e9a06>  input.user == hr[_]
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># David is the only member of HR.
+</span><span style=color:#4e9a06>hr = [
+</span><span style=color:#4e9a06>  &#34;david&#34;,
+</span><span style=color:#4e9a06>]
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>Upload the new policy to OPA.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @example-hr.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  http://localhost:8181/v1/policies/example-hr</code></pre></div><p>For the sake of the tutorial we included <code>manager_of</code> and <code>hr</code> data directly
+inside the policies. In real-world scenarios that information would be imported
+from external data sources.</p><h3 id=7-check-that-the-new-policy-works>7. Check that the new policy works.</h3><p>Check that <code>david</code> can see anyone&rsquo;s salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user david:password localhost:5000/finance/salary/alice
+curl --user david:password localhost:5000/finance/salary/bob
+curl --user david:password localhost:5000/finance/salary/charlie
+curl --user david:password localhost:5000/finance/salary/david</code></pre></div><h3 id=8-optional-use-json-web-tokens-to-communicate-policy-data>8. (Optional) Use JSON Web Tokens to communicate policy data.</h3><p>OPA supports the parsing of JSON Web Tokens via the builtin function <code>io.jwt.decode</code>.
+To get a sense of one way the subordinate and HR data might be communicated in the
+real world, let&rsquo;s try a similar exercise utilizing the JWT utilities of OPA.</p><p>Shut down your <code>docker-compose</code> instance from before with <code>^C</code> and then restart it to
+ensure you are working with a fresh instance of OPA.</p><p>Then update the policy:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat &gt;example.rego <span style=color:#4e9a06>&lt;&lt;EOF
+</span><span style=color:#4e9a06>package httpapi.authz
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>import input
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># io.jwt.decode takes one argument (the encoded token) and has three outputs:
+</span><span style=color:#4e9a06># the decoded header, payload and signature, in that order. Our policy only
+</span><span style=color:#4e9a06># cares about the payload, so we ignore the others.
+</span><span style=color:#4e9a06>token = {&#34;payload&#34;: payload} { io.jwt.decode(input.token, [_, payload, _]) }
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Ensure that the token was issued to the user supplying it.
+</span><span style=color:#4e9a06>user_owns_token { input.user == token.payload.azp }
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06>default allow = false
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow users to get their own salaries.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, username]
+</span><span style=color:#4e9a06>  token.payload.user == username
+</span><span style=color:#4e9a06>  user_owns_token
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow managers to get their subordinate&#39; salaries.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, username]
+</span><span style=color:#4e9a06>  token.payload.subordinates[_] == username
+</span><span style=color:#4e9a06>  user_owns_token
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>
+</span><span style=color:#4e9a06># Allow HR members to get anyone&#39;s salary.
+</span><span style=color:#4e9a06>allow {
+</span><span style=color:#4e9a06>  input.method == &#34;GET&#34;
+</span><span style=color:#4e9a06>  input.path = [&#34;finance&#34;, &#34;salary&#34;, _]
+</span><span style=color:#4e9a06>  token.payload.hr == true
+</span><span style=color:#4e9a06>  user_owns_token
+</span><span style=color:#4e9a06>}
+</span><span style=color:#4e9a06>EOF</span></code></pre></div><p>And load it into OPA:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl -X PUT --data-binary @example.rego <span style=color:#4e9a06>\
+</span><span style=color:#4e9a06></span>  localhost:8181/v1/policies/example</code></pre></div><p>For convenience, we&rsquo;ll want to store user tokens in environment variables (they&rsquo;re really long).</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#204a87>export</span> <span style=color:#000>ALICE_TOKEN</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWxpY2UiLCJhenAiOiJhbGljZSIsInN1Ym9yZGluYXRlcyI6W10sImhyIjpmYWxzZX0.rz3jTY033z-NrKfwrK89_dcLF7TN4gwCMj-fVBDyLoM&#34;</span>
+<span style=color:#204a87>export</span> <span style=color:#000>BOB_TOKEN</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYm9iIiwiYXpwIjoiYm9iIiwic3Vib3JkaW5hdGVzIjpbImFsaWNlIl0sImhyIjpmYWxzZX0.n_lXN4H8UXGA_fXTbgWRx8b40GXpAGQHWluiYVI9qf0&#34;</span>
+<span style=color:#204a87>export</span> <span style=color:#000>CHARLIE_TOKEN</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiY2hhcmxpZSIsImF6cCI6ImNoYXJsaWUiLCJzdWJvcmRpbmF0ZXMiOltdLCJociI6ZmFsc2V9.EZd_y_RHUnrCRMuauY7y5a1yiwdUHKRjm9xhVtjNALo&#34;</span>
+<span style=color:#204a87>export</span> <span style=color:#000>BETTY_TOKEN</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYmV0dHkiLCJhenAiOiJiZXR0eSIsInN1Ym9yZGluYXRlcyI6WyJjaGFybGllIl0sImhyIjpmYWxzZX0.TGCS6pTzjrs3nmALSOS7yiLO9Bh9fxzDXEDiq1LIYtE&#34;</span>
+<span style=color:#204a87>export</span> <span style=color:#000>DAVID_TOKEN</span><span style=color:#ce5c00;font-weight:700>=</span><span style=color:#4e9a06>&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGF2aWQiLCJhenAiOiJkYXZpZCIsInN1Ym9yZGluYXRlcyI6W10sImhyIjp0cnVlfQ.Q6EiWzU1wx1g6sdWQ1r4bxT1JgSHUpVXpINMqMaUDMU&#34;</span></code></pre></div><p>These tokens encode the same information as the policies we did before (<code>bob</code> is <code>alice</code>&rsquo;s manager, <code>betty</code> is <code>charlie</code>&rsquo;s, <code>david</code> is the only HR member, etc).
+If you want to inspect their contents, start up the OPA REPL and execute <code>io.jwt.decode(&lt;token here&gt;, [header, payload, signature])</code>.</p><p>Let&rsquo;s try a few queries (note: you may need to escape the <code>?</code> characters in the queries for your shell):</p><p>Check that <code>charlie</code> can&rsquo;t see <code>bob</code>&rsquo;s salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user charlie:password localhost:5000/finance/salary/bob?token<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$CHARLIE_TOKEN</span></code></pre></div><p>Check that <code>charlie</code> can&rsquo;t pretend to be <code>bob</code> to see <code>alice</code>&rsquo;s salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user charlie:password localhost:5000/finance/salary/alice?token<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$BOB_TOKEN</span></code></pre></div><p>Check that <code>david</code> can see <code>betty</code>&rsquo;s salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user david:password localhost:5000/finance/salary/betty?token<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$DAVID_TOKEN</span></code></pre></div><p>Check that <code>bob</code> can see <code>alice</code>&rsquo;s salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user bob:password localhost:5000/finance/salary/alice?token<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$BOB_TOKEN</span></code></pre></div><p>Check that <code>alice</code> can see her own salary.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>curl --user alice:password localhost:5000/finance/salary/alice?token<span style=color:#ce5c00;font-weight:700>=</span><span style=color:#000>$ALICE_TOKEN</span></code></pre></div><h2 id=wrap-up>Wrap Up</h2><p>Congratulations for finishing the tutorial!</p><p>You learned a number of things about API authorization with OPA:</p><ul><li>OPA gives you fine-grained policy control over APIs once you set up the
+server to ask OPA for authorization.</li><li>You write allow/deny policies to control which APIs can be executed by whom.</li><li>You can import external data into OPA and write policies that depend on
+that data.</li><li>You can use OPA data structures to define abstractions over your data.</li></ul><p>The code for this tutorial can be found in the
+<a href=https://github.com/open-policy-agent/contrib>open-policy-agent/contrib</a>
+repository.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>

@@ -1,0 +1,339 @@
+<!doctype html><html lang=en><head><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-84550302-1','auto');ga('send','pageview');</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=description content="Policy-based control for cloud native environments"><meta property=og:title content="Guides: Kubernetes Admission Control"><meta property=og:type content=documentation><meta property=og:url content=https://openpolicyagent.org/docs/v0.10.7/guides-kubernetes-admission-control/><meta property=og:locale content=en_US><meta property=og:site_name content="Open Policy Agent"><meta property=og:description content="Policy-based control for cloud native environments"><meta name=og:type content=article><meta name=og:image content=https://openpolicyagent.org/img/logos/opa-horizontal-color.png><meta name=og:image:alt content="Open Policy Agent project logo"><meta name=og:image:type content=image/png><meta name=twitter:card content=summary><meta name=twitter:site content=@OpenPolicyAgent><meta name=twitter:creator content=@OpenPolicyAgent><link rel=canonical content=https://openpolicyagent.org/docs/v0.10.7/guides-kubernetes-admission-control/><link rel="shortcut icon" href=/favicon.png type=image/x-icon><meta name=generator content="Hugo 0.53"><title>Open Policy Agent | Guides: Kubernetes Admission Control</title><link rel=stylesheet href=/css/style.6bbca25e01250b8412df90aabdfbddb4f7b3b892dd593d933cd29794b98a3373.css integrity="sha256-a7yiXgElC4QS35CqvfvdtPezuJLdWT2TPNKXlLmKM3M="></head><body><div class=dashboard><div class="dashboard-panel left has-background-white-bis is-hidden-mobile"><div class="dashboard-panel-header has-text-centered"><div class=dashboard-panel-header-logo><a href=https://openpolicyagent.org><img src=/img/logos/opa-stacked-color.png></a></div><div class="dropdown is-left"><div class=dropdown-trigger><span class="button is-primary"><span><strong>v0.10.7</strong>
+<span class="tag latest-tag is-success is-small has-text-weight-bold">latest</span></span></span></div></div></div><div class="dashboard-panel-content is-scrollable"><div class=docs-nav><span class=docs-nav-title>Documentation</span>
+<a class=docs-nav-item href=/docs/v0.10.7/>Introduction</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=docs-nav-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=docs-nav-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=docs-nav-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=docs-nav-item href=/docs/v0.10.7/status/>Status</a>
+<a class=docs-nav-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=docs-nav-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=docs-nav-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=docs-nav-item href=/docs/v0.10.7/security/>Security</a>
+<a class=docs-nav-item href=/docs/v0.10.7/plugins/>Plugins</a>
+<a class=docs-nav-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=docs-nav-item href=/docs/v0.10.7/faq/>FAQ</a>
+<a class=docs-nav-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><hr class=docs-nav-hr><span class=docs-nav-title>Tutorials</span>
+<a class=docs-nav-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=docs-nav-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=docs-nav-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=docs-nav-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=docs-nav-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><hr class=docs-nav-hr><span class=docs-nav-title>Guides</span>
+<a class=docs-nav-item href=/docs/v0.10.7/guides-identity/>Identity and User Attributes</a>
+<a class="docs-nav-item is-active" href=/docs/v0.10.7/guides-kubernetes-admission-control/>Kubernetes Admission Control</a><div class=toc><nav id=TableOfContents><ul><li><ul><li><a href=#example-policy-image-registry-safety>Example Policy: Image Registry Safety</a></li><li><a href=#unit-testing-policies>Unit Testing Policies</a></li><li><a href=#external-resources-ingress-conflicts>External Resources: Ingress Conflicts</a></li><li><a href=#admission-control-flow>Admission Control Flow</a></li></ul></li></ul></nav></div></div></div></div><div class="dashboard-main is-scrollable"><nav class="navbar is-primary"><div class="navbar-brand is-hidden-tablet"><a class=navbar-item href=https://openpolicyagent.org><img src=/img/logos/opa-icon-white.png></a>
+<a role=button class="navbar-burger burger" aria-label=menu aria-expanded=false data-target=mobile-menu><span aria-hidden=true></span><span aria-hidden=true></span><span aria-hidden=true></span></a></div><div class="navbar-menu is-hidden-tablet" id=mobile-menu><div class=navbar-start><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Documentation</span>
+<a class=navbar-item href=/docs/v0.10.7/>Introduction</a>
+<a class=navbar-item href=/docs/v0.10.7/how-does-opa-work/>How Does OPA Work?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-write-policies/>How Do I Write Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/how-do-i-test-policies/>How Do I Test Policies?</a>
+<a class=navbar-item href=/docs/v0.10.7/language-reference/>Language Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/configuration/>Configuration Reference</a>
+<a class=navbar-item href=/docs/v0.10.7/rest-api/>REST API</a>
+<a class=navbar-item href=/docs/v0.10.7/deployments/>Deployments</a>
+<a class=navbar-item href=/docs/v0.10.7/bundles/>Bundles</a>
+<a class=navbar-item href=/docs/v0.10.7/status/>Status</a>
+<a class=navbar-item href=/docs/v0.10.7/decision-logs/>Decision Logs</a>
+<a class=navbar-item href=/docs/v0.10.7/monitoring/>Monitoring</a>
+<a class=navbar-item href=/docs/v0.10.7/discovery/>Discovery</a>
+<a class=navbar-item href=/docs/v0.10.7/security/>Security</a>
+<a class=navbar-item href=/docs/v0.10.7/plugins/>Plugins (Experimental)</a>
+<a class=navbar-item href=/docs/v0.10.7/comparison-to-other-systems/>Comparison to Other Systems</a>
+<a class=navbar-item href=/docs/v0.10.7/faq/>Frequently Asked Questions</a>
+<a class=navbar-item href=/docs/v0.10.7/rego-cheatsheet/>Rego Cheatsheet</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Tutorials</span>
+<a class=navbar-item href=/docs/v0.10.7/get-started/>Get started</a>
+<a class=navbar-item href=/docs/v0.10.7/docker-authorization/>Docker Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/http-api-authorization/>HTTP API Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/ssh-and-sudo-authorization/>SSH and sudo Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kafka-authorization/>Kafka Authorization</a>
+<a class=navbar-item href=/docs/v0.10.7/kubernetes-admission-control/>Kubernetes Admission Control</a>
+<a class=navbar-item href=/docs/v0.10.7/terraform/>Terraform Testing</a>
+<a class=navbar-item href=/docs/v0.10.7/ceph-authorization/>Ceph Authorization</a><br><span class="navbar-item is-size-5 has-text-weight-light is-uppercase">Guides</span>
+<a class=navbar-item href=/docs/v0.10.7/guides-identity/>Guides: Identity and User Attributes</a>
+<a class=navbar-item href=/docs/v0.10.7/guides-kubernetes-admission-control/>Guides: Kubernetes Admission Control</a></div><div class=navbar-end><div class=navbar-item><div class=buttons><a class="button is-primary" href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class="button is-primary" href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class="button is-primary" href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class="button is-primary" href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></div></div><div class=navbar-menu><div class=navbar-end><a class=navbar-item href=https://github.com/open-policy-agent/opa target=_blank><span class="icon has-text-white-bis"><i class="fab fa-github"></i></span></a><a class=navbar-item href=https://twitter.com/OpenPolicyAgent target=_blank><span class="icon has-text-white-bis"><i class="fab fa-twitter"></i></span></a><a class=navbar-item href=https://blog.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-medium"></i></span></a><a class=navbar-item href=https://slack.openpolicyagent.org target=_blank><span class="icon has-text-white-bis"><i class="fab fa-slack"></i></span></a></div></div></nav><article class=article><div class=container><section class=hero><div class=hero-body><p class="title is-size-1 is-size-2-mobile">Guides: Kubernetes Admission Control</p></div></section><section class=section><div class=content><p>In Kubernetes, Admission Controllers enforce semantic validation of objects during create, update, and delete operations. With OPA you can enforce custom policies on Kubernetes objects without recompiling or reconfiguring the Kubernetes API server or even Kubernetes Admission Controllers.</p><p>This primer assumes you, the Kubernetes administrator, have already installed OPA as a validating admission controller on Kubernetes as described in the <a href=../kubernetes-admission-control>Kubernetes Admission Control Tutorial</a>. And now you are at the point where you want to write your own policies.</p><p>OPA was designed to write policies over arbitrary JSON/YAML. It does NOT have built-in concepts like pods, deployments, or services. OPA just sees the JSON/YAML sent by Kubernetes API server and allows you to write whatever policy you want to make a decision. You as the policy-author know the semantics&ndash;what that JSON/YAML represents.</p><h2 id=example-policy-image-registry-safety>Example Policy: Image Registry Safety</h2><p>To get started, let&rsquo;s look at a common policy: ensure all images come from a trusted registry.</p><pre><code>1: package kubernetes.admission
+2: deny[msg] {
+3:     input.request.kind.kind == &quot;Pod&quot;
+4:     image := input.request.object.spec.containers[_].image
+5:     not startswith(image, &quot;hooli.com&quot;)
+6:     msg := sprintf(&quot;image fails to come from trusted registry: %v&quot;, [image])
+7: }
+</code></pre><p><strong>Policies and Packages</strong>.
+In line 1 the <code>package kubernetes.admission</code> declaration gives the (hierarchical) name <code>kubernetes.admission</code> to the rules in the remainder of the policy. The default installation of OPA as an admission controller assumes your rules are in the package <code>kubernetes.admission</code>.</p><p><strong>Deny Rules</strong>. For admission control, you write <code>deny</code> statements. Order does not matter. (OPA is far more flexible than this, but we recommend writing just <code>deny</code> statements to start.) In line 2, the <em>head</em> of the rule <code>deny[msg]</code> says that the admission control request should be rejected and the user handed the error message <code>msg</code> if the conditions in the <em>body</em> (the statements between the <code>{}</code>) are true.</p><p><code>deny</code> is the <em>set</em> of error messages that should be returned to the user. Each rule you write adds to that set of error messages.</p><p>For example, suppose you tried to create the Pod below with nginx and mysql images.</p><pre><code>kind: Pod
+apiVersion: v1
+metadata:
+  name: myapp
+spec:
+  containers:
+  - image: nginx
+    name: nginx-frontend
+  - image: mysql
+    name: mysql-backend
+</code></pre><p><code>deny</code> evaluates to the following set of messages.</p><pre><code>[
+  &quot;image fails to come from trusted registry: nginx&quot;,
+  &quot;image fails to come from trusted registry: mysql&quot;
+]
+</code></pre><p><strong>Input</strong> In OPA, <code>input</code> is a reserved, global variable whose value is the Kubernetes AdmissionReview object that the API server hands to any admission control webhook.</p><p>AdmissionReview objects have many fields. The rule above uses <code>input.request.kind</code>, which includes the usual group/version/kind information. The rule also uses <code>input.request.object</code>, which is the YAML that the user provided to <code>kubectl</code> (augmented with defaults, timestamps, etc.). The full <code>input</code> object is 50+ lines of YAML, so below we show just the relevant parts.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>admission.k8s.io/v1beta1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>AdmissionReview<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>request<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>group<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Pod<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>object<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>metadata<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>myapp<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>spec<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>containers<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx-frontend<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>mysql<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>mysql-backend</code></pre></div><p><strong>Dot notation</strong> In line 3 <code>input.request.kind.kind == &quot;Pod&quot;</code>, the expression <code>input.request.kind.kind</code> does the obvious thing: it descends through the YAML hierarchy. The dot (.) operator never throws any errors; if the path does not exist the value of the expression is <code>undefined</code>.</p><p>You can see OPA&rsquo;s evaluation in the REPL.</p><pre><code>&gt; input.request.kind
+{
+  &quot;group&quot;: null,
+  &quot;kind&quot;: &quot;Pod&quot;,
+  &quot;version&quot;: &quot;v1&quot;
+}
+&gt; input.request.kind.kind
+&quot;Pod&quot;
+&gt; input.request.object.spec.containers
+[
+  {
+    &quot;image&quot;: &quot;nginx&quot;,
+    &quot;name&quot;: &quot;nginx-frontend&quot;
+  },
+  {
+    &quot;image&quot;: &quot;mysql&quot;,
+    &quot;name&quot;: &quot;mysql-backend&quot;
+  }
+]
+</code></pre><p><strong>Equality</strong>. Lines 3,4,6 all use a form of equality. There are 3 forms of equality in OPA.</p><ul><li><code>x := 7</code> declares a local variable <code>x</code> and assigns variable <code>x</code> to the value 7. The compiler throws an error if <code>x</code> already has a value.</li><li><code>x == 7</code> returns true if <code>x</code>&rsquo;s value is 7. The compiler throws an error if <code>x</code> has no value.</li><li><code>x = 7</code> either assigns <code>x</code> to 7 if <code>x</code> has no value or compares <code>x</code>&rsquo;s value to 7 if it has a value. The compiler never throws an error.</li></ul><p>The recommendation for rule-writing is to use <code>:=</code> and <code>==</code> wherever possible. Rules written with <code>:=</code> and <code>==</code> are easier to write and to read. <code>=</code> is invaluable in more advanced use cases, and outside of rules is the only supported form of equality.</p><p><strong>Arrays</strong>. Lines 4-5 find images in the Pod that don&rsquo;t come from the trusted registry. To do that, they use the <code>[]</code> operator, which does what you expect: index into the array.</p><p>Continuing the example from earlier:</p><pre><code>&gt; input.request.object.spec.containers[0]
+{
+  &quot;image&quot;: &quot;nginx&quot;,
+  &quot;name&quot;: &quot;nginx-frontend&quot;
+}
+&gt; input.request.object.spec.containers[0].image
+&quot;nginx&quot;
+</code></pre><p>The <code>[]</code> operators let you use variables to index into the array as well.</p><pre><code>&gt; i := 0
+&gt; input.request.object.spec.containers[i]
+{
+  &quot;image&quot;: &quot;nginx&quot;,
+  &quot;name&quot;: &quot;nginx-frontend&quot;
+}
+</code></pre><p><strong>Iteration</strong> The containers array has an unknown number of elements, so to implement an image registry check you need to iterate over them. Iteration in OPA requires no new syntax. In fact, OPA is always iterating&ndash;it&rsquo;s always searching for all variable assignments that make the conditions in the rule true. It&rsquo;s just that sometimes the search is so easy people don&rsquo;t think of it as iteration/search.</p><p>To iterate over the indexes in the <code>input.request.object.spec.containers</code> array, you just put a variable that has no value in for the index. OPA will do what it always does: find values for that variable that make the conditions true.</p><p>In the REPL, OPA detects when there will be multiple answers and displays all the results in a table.</p><pre><code>&gt; input.request.object.spec.containers[j]
++---+-------------------------------------------+
+| j |  input.request.object.spec.containers[j]  |
++---+-------------------------------------------+
+| 0 | {&quot;image&quot;:&quot;nginx&quot;,&quot;name&quot;:&quot;nginx-frontend&quot;} |
+| 1 | {&quot;image&quot;:&quot;mysql&quot;,&quot;name&quot;:&quot;mysql-backend&quot;}  |
++---+-------------------------------------------+
+</code></pre><p>Often you don&rsquo;t want to invent new variable names for iteration. OPA provides the special anonymous variable <code>_</code> for exactly that reason. So in line (4) <code>image := input.request.object.spec.containers[_].image</code> finds all the images in the containers array and assigns each to the <code>image</code> variable one at a time.</p><p><strong>Builtins</strong>. On line 5 the <em>builtin</em> <code>startswith</code> checks if one string is a prefix of the other. The builtin <code>sprintf</code> on line 6 formats a string with arguments. OPA has 50+ builtins detailed at <a href=../language-reference>openpolicyagent.org/docs/language-reference</a>.
+Builtins let you analyze and manipulate:</p><ul><li>Numbers, Strings, Regexs, Networks</li><li>Aggregates, Arrays, Sets</li><li>Types</li><li>Encodings (base64, YAML, JSON, URL, JWT)</li><li>Time</li></ul><h2 id=unit-testing-policies>Unit Testing Policies</h2><p>When you write policies, you should use the OPA unit-test framework <em>before</em> sending the policies out into the OPA that is running on your cluster. The debugging process will be much quicker and effective. Here&rsquo;s an example test for the policy from the last section.</p><pre><code> 1: package kubernetes.test_admission
+ 2: import data.kubernetes.admission
+ 3:
+ 4: test_image_safety {
+ 5:   unsafe_image := {&quot;request&quot;: {
+ 6:       &quot;kind&quot;: {&quot;kind&quot;: &quot;Pod&quot;},
+ 7:       &quot;object&quot;: {&quot;spec&quot;: {&quot;containers&quot;: [
+ 8:           {&quot;image&quot;: &quot;hooli.com/nginx&quot;},
+ 9:           {&quot;image&quot;: &quot;busybox&quot;}]}}}}
+10:   count(admission.deny) == 1 with input as unsafe_image
+11: }
+</code></pre><p><strong>Different Package</strong>. On line 1 the <code>package</code> directive puts these tests in a different package than admission control policy itself. This is the recommended best practice.</p><p><strong>Import</strong>. On line 2 <code>import data.kubernetes.admission</code> allows us to reference the admission control policy using the name <code>admission</code> everwhere in the test package. <code>import</code> is not strictly necessary&ndash;it simply sets up an alias; you could instead reference <code>data.kubernetes.admission</code> inside the rules.</p><p><strong>Unit Test</strong>. On line 4 <code>test_image_safety</code> defines a unittest. If the rule evaluates to true the test passes; otherwise it fails. When you use the OPA test runner, anything in any package starting with <code>test</code> is treated as a test.</p><p><strong>Assignment</strong>. On line 5 <code>unsafe_image</code> is the input we want to use for the test. Ideally this would be a real AdmissionReview object, though those are so long that in this example we hand-rolled a partial input.</p><p><strong>Dot for packages</strong>. On line 11 we use the Dot operator on a package. <code>admission.deny</code> runs (all) the <code>deny</code> rule(s) in package <code>admission</code> (and all other <code>deny</code> rules in the <code>admission</code> package).</p><p><strong>Test Input</strong>. Also on line 11 the stanza <code>with input as unsafe_image</code> sets the value of <code>input</code> to be <code>unsafe_image</code> while evaluating <code>count(admission.deny) == 1</code>.</p><p><strong>Running Tests</strong>. If you&rsquo;ve created the files <em>image-safety.rego</em> and <em>test-image-safety.rego</em> in the current directory then you run the tests by naming the files explicitly as shown below or by handing the <code>opa test</code> command the directory (and subdirectories) of files to load: <code>opa test .</code></p><pre><code>$ opa test image-safety.rego test-image-safety.rego
+PASS: 1/1
+</code></pre><h2 id=external-resources-ingress-conflicts>External Resources: Ingress Conflicts</h2><p>The image-repository example shows an example where you can make a policy decision using just the one JSON/YAML file describing the resource in question. But sometimes you need to know what other resources exist in the cluster to make an allow/deny decision.</p><p>For example, it’s possible to accidentally configure two Kubernetes ingresses so that one steals traffic from the other. The policy that prevents conflicting ingresses needs to compare the ingress that’s being created/updated with all of the existing ingresses. Just knowing the new/updated ingress isn&rsquo;t enough information to make an allow/deny decision.</p><p>Below is a partial example of the input OPA sees when someone creates an ingress. To avoid conflicts, we want to prevent two ingresses from having the same <code>request.object.spec.rules.host</code>. If OPA has only this one ingress configuration it doesn&rsquo;t have enough information to make an allow/deny decision; it also needs the configurations for all of the existing ingresses.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>admission.k8s.io/v1beta1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>AdmissionReview<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>request<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>group<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>extensions<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Ingress<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1beta1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>object<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>metadata<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>prod<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>spec<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>rules<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>host<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>initech.com<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>http<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>paths<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>path<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>/finance<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>            </span>backend<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>              </span>serviceName<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>banking<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>              </span>servicePort<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>443</span></code></pre></div><p>To avoid conflicting ingresses, you write a policy like the one that follows.</p><pre><code>1: package kubernetes.admission
+2: deny[msg] {
+3:     input.request.kind.kind == &quot;Ingress&quot;
+4:     newhost := input.request.object.spec.rules[_].host
+5:     oldhost := data.kubernetes.ingresses[namespace][name].spec.rules[_].host
+6:     newhost == oldhost
+7:     msg := sprintf(&quot;ingress host conflicts with ingress %v/%v&quot;, [namespace, name])
+8: }
+</code></pre><p>The first part of the rule you already understand:
+* Line (3) checks if the <code>input</code> is an Ingress
+* Line (4) iterates over all the rules in the <code>input</code> ingress and looks up the <code>host</code> field for each of its rules.</p><p><strong>Existing K8s Resources</strong> Line (5) iterates over ingresses that already exist in Kubernetes. <code>data</code> is a global variable where (among other things) OPA has a record of the current resources inside Kubernetes. The line <code>oldhost := data.kubernetes.ingresses[namespace][name].spec.rules[_].host</code> finds all ingresses in all namespaces, iterates over all the <code>rules</code> inside each of those and assigns the <code>host</code> field to the variable <code>oldhost</code>. Whenever <code>newhost == oldhost</code>, there&rsquo;s a conflict, and the OPA rule includes an appropriate error message into the <code>deny</code> set.</p><p>In this case the rule uses explicit variable names <code>namespace</code> and <code>name</code> for iteration so that it can use those variables again when constructing the error message in line 7.</p><p><strong>Schema Differences</strong>. Both <code>input</code> and <code>data.kubernetes.ingresses[namespace][name]</code> represent ingresses, but they do it differently.</p><ul><li><code>input</code> is a K8s AdmissionReview object. It includes several fields in addition to the K8s Ingress object itself.</li><li><code>data.kubernetes.ingresses[namespace][name]</code> is a native Kubernetes Ingress object as returned by the API.</li></ul><p>Here are two examples.</p><div><div style=float:left;width:49%;padding:3px><center><b>data.kubernetes.ingresses[namespace][name]</b></center><pre><code>
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prod
+spec:
+  rules:
+  - host: initech.com
+    http:
+      paths:
+      - path: /finance
+        backend:
+          serviceName: banking
+          servicePort: 443
+</code></pre></div><div style="float:left;width:49%;padding 3px"><center><b>input</b></center><pre><code>
+apiVersion: admission.k8s.io/v1beta1
+kind: AdmissionReview
+request:
+  kind:
+    group: extensions
+    kind: Ingress
+    version: v1beta1
+  operation: CREATE
+  userInfo:
+    groups:
+    username: alice
+  object:
+    metadata:
+      name: prod
+    spec:
+      rules:
+      - host: initech.com
+        http:
+          paths:
+          - path: /finance
+            backend:
+              serviceName: banking
+              servicePort: 443
+</code></pre></div><p><br></p><h2 id=admission-control-flow>Admission Control Flow</h2><p>Here is a sample of the flow of information from the user to the API server to
+OPA and back.</p><p>It starts with someone (or something) running <code>kubectl</code> (or sending a request to
+the API server.) For example, a user might run <code>kubkectl create -f pod.yaml</code>:</p><p><strong>pod.yaml</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Pod<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>metadata<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>labels<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>app<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>spec<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>containers<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx</code></pre></div><p>When the request reaches the API server it&rsquo;s authenticated and authorized and
+processed by the admission controllers. When the API server&rsquo;s Webhook admission
+controller executes, the API server sends a webhook request to OPA containing an
+<strong>AdmissionReview</strong> object.</p><p><strong>AdmissionReview</strong>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>admission.k8s.io/v1beta1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>AdmissionReview<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>request<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>group<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#39;&#39;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Pod<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>namespace<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>object<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>metadata<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>creationTimestamp<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#39;2018-10-27T02:12:20Z&#39;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>labels<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>app<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>namespace<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>opa<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>uid<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>bbfee96d-d98d-<span style=color:#0000cf;font-weight:700>11e8</span>-b280-<span style=color:#0000cf;font-weight:700>080027868e77</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>spec<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>containers<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>image<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>imagePullPolicy<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Always<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>nginx<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>resources<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>{}<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>terminationMessagePath<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;/dev/termination-log&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>terminationMessagePolicy<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>File<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>volumeMounts<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>mountPath<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;/var/run/secrets/kubernetes.io/serviceaccount&#34;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default-token-tm9v8<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>readOnly<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#204a87;font-weight:700>true</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>dnsPolicy<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>ClusterFirst<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>restartPolicy<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Always<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>schedulerName<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default-scheduler<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>securityContext<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>{}<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>serviceAccount<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>serviceAccountName<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>terminationGracePeriodSeconds<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>30</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>tolerations<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>effect<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>NoExecute<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>key<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>node.kubernetes.io/not-ready<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>operator<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Exists<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>tolerationSeconds<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>300</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>effect<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>NoExecute<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>key<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>node.kubernetes.io/unreachable<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>operator<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Exists<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>tolerationSeconds<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#0000cf;font-weight:700>300</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>volumes<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>name<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default-token-tm9v8<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>        </span>secret<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>          </span>secretName<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>default-token-tm9v8<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>status<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>phase<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>Pending<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>      </span>qosClass<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>BestEffort<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>oldObject<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>operation<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>CREATE<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>resource<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>group<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#39;&#39;</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>resource<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>pods<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>version<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>v1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>uid<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>bbfeef88-d98d-<span style=color:#0000cf;font-weight:700>11e8</span>-b280-<span style=color:#0000cf;font-weight:700>080027868e77</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>userInfo<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>groups<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>system<span style=color:#000;font-weight:700>:</span>masters<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>-<span style=color:#f8f8f8;text-decoration:underline> </span>system<span style=color:#000;font-weight:700>:</span>authenticated<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>username<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>minikube-user</code></pre></div><p>Typically the API server is configured (via <code>ValidatingWebhookConfiguration</code> or
+<code>MutatingWebhookConfiguration</code> objects) to query OPA without providing the name
+of a decision. For example:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-http data-lang=http><span style=color:#000>POST</span> <span style=color:#000>/</span> <span style=color:#204a87;font-weight:700>HTTP</span><span style=color:#ce5c00;font-weight:700>/</span><span style=color:#0000cf;font-weight:700>1.1</span>
+<span style=color:#000>Content-Type</span><span style=color:#ce5c00;font-weight:700>:</span> <span style=color:#000>application/json</span></code></pre></div><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#000;font-weight:700>{</span>
+  <span style=color:#204a87;font-weight:700>&#34;apiVersion&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;admission.k8s.io/v1beta1&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;kind&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;AdmissionReview&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#204a87;font-weight:700>&#34;request&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#a40000>...</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>When OPA receives the webhook request, it binds the payload to the <code>input</code>
+document and generates the default decision: <code>system.main</code>. The <code>system.main</code>
+decision is defined by a rule that evaluates all of the admission control
+policies that have been loaded into OPA.</p><p>As the administrator responsible for deploying OPA, you have full control over
+the <code>system.main</code> decision (i.e., it is just another Rego policy.) A basic
+implementation of the <code>system.main</code> policy simply evaluates all deny rules that
+have been loaded into OPA and unions the results:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=color:#000>package</span> <span style=color:#204a87>system</span>
+
+<span style=color:#000>import</span> <span style=color:#000>data</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>kubernetes</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>admission</span>
+
+<span style=color:#000>main</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+  <span style=color:#4e9a06>&#34;apiVersion&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;admission.k8s.io/v1beta1&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#4e9a06>&#34;kind&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#4e9a06>&#34;AdmissionReview&#34;</span><span style=color:#000;font-weight:700>,</span>
+  <span style=color:#4e9a06>&#34;response&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>response</span><span style=color:#000;font-weight:700>,</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>default</span> <span style=color:#000>response</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span><span style=color:#4e9a06>&#34;allowed&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>true</span><span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000>response</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#4e9a06>&#34;allowed&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#204a87;font-weight:700>false</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#4e9a06>&#34;status&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000;font-weight:700>{</span>
+        <span style=color:#4e9a06>&#34;reason&#34;</span><span style=color:#000;font-weight:700>:</span> <span style=color:#000>reason</span><span style=color:#000;font-weight:700>,</span>
+    <span style=color:#000;font-weight:700>},</span>
+<span style=color:#000;font-weight:700>}</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000>reason</span> <span style=color:#ce5c00;font-weight:700>=</span> <span style=color:#000>concat</span><span style=color:#000;font-weight:700>(</span><span style=color:#4e9a06>&#34;, &#34;</span><span style=color:#000;font-weight:700>,</span> <span style=color:#000>admission</span><span style=color:#ce5c00;font-weight:700>.</span><span style=color:#000>deny</span><span style=color:#000;font-weight:700>)</span>
+    <span style=color:#000>reason</span> <span style=color:#ce5c00;font-weight:700>!=</span> <span style=color:#4e9a06>&#34;&#34;</span>
+<span style=color:#000;font-weight:700>}</span></code></pre></div><p>The <code>system.main</code> policy MUST generate an <strong>AdmissionReview</strong> object containing
+a response that the API server can interpret. If the request should be allowed,
+the <code>response.allowed</code> field should be true. Otherwise, the <code>response.allowed</code>
+field should be set to <code>false</code> and the <code>response.status.reason</code> field should be
+set to include an error message that indicates why the request is being
+rejected. The error message will be returned to the API server caller (e.g., the
+user running <code>kubectl</code>). Often the error message is the concatenation of all the
+messages in the <code>deny</code> set defined above.</p><p>For example, with the input and Image Registry Safety examples above, the
+response from OPA would be:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>apiVersion<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>admission.k8s.io/v1beta1<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>kind<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span>AdmissionReview<span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline></span>response<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>allowed<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#204a87;font-weight:700>false</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>  </span>status<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline>
+</span><span style=color:#f8f8f8;text-decoration:underline>    </span>reason<span style=color:#000;font-weight:700>:</span><span style=color:#f8f8f8;text-decoration:underline> </span><span style=color:#4e9a06>&#34;image fails to come from trusted registry: nginx&#34;</span></code></pre></div><p>For more detail on how Kubernetes Admission Control works, see <a href=https://kubernetes.io/blog/2019/03/21/a-guide-to-kubernetes-admission-controllers/>this blog
+post</a>
+on kubernetes.io.</p></div></section></div></article></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js></script><script src=/js/app.145c7a3bc61d0b561cc282851776ffdcd33e6b35aebca1b05449aa9195eaf751.js integrity="sha256-FFx6O8YdC1YcwoKFF3b/3NM&#43;azWuvKGwVEmqkZXq91E="></script></body></html>
