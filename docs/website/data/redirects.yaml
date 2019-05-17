@@ -17,6 +17,7 @@
 - kafka-authorization
 - kubernetes-admission-control
 - language-reference
+- lisette
 - monitoring
 - plugins
 - rego-cheatsheet
