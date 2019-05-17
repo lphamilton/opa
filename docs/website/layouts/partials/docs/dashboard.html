@@ -4,6 +4,8 @@
 {{ $latest     := index $releases 0 }}
 {{ $version    := index (split .File.Path "/") 1 }}
 {{ $isLatest   := eq $version $latest }}
+{{ $isSupport  := eq .Params.kind "support" }}
+
 <div class="dashboard">
   <div class="dashboard-panel left has-background-white-bis is-hidden-mobile">
     <div class="dashboard-panel-header has-text-centered">
@@ -70,6 +72,12 @@
 
   <div class="dashboard-main is-scrollable">
     {{ partial "docs/navbar.html" . }}
+
+    {{ if (not $isSupport) }}
     {{ partial "docs/article.html" . }}
+
+    {{ else if $isSupport }}
+    {{ partial "home/support.html" . }}
+    {{ end }}
   </div>
 </div>

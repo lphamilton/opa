@@ -3,6 +3,7 @@
 {{ $docs       := where $allDocs ".Params.kind" "eq" "documentation" }}
 {{ $tutorials  := where $allDocs ".Params.kind" "eq" "tutorial" }}
 {{ $guides     := where $allDocs ".Params.kind" "eq" "guides" }}
+{{ $support    := where $allDocs ".Params.kind" "eq" "support" }}
 {{ $pageUrl    := .URL }}
 {{ $isDocsHome := eq .URL $docsHome.URL }}
 {{ $version    := index (split .File.Path "/") 1 }}
@@ -50,3 +51,14 @@
 {{ partial "docs/sidenav-link.html" (dict "ctx" . "pageUrl" $pageUrl "version" $version) }}
 {{ end }}
 {{ end }}
+
+<hr class="docs-nav-hr" />
+
+<span class="docs-nav-title">
+  Support
+</span>
+
+{{ range $support }}
+{{ partial "docs/sidenav-link.html" (dict "ctx" . "pageUrl" $pageUrl "version" $version) }}
+{{ end }}
+

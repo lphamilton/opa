@@ -4,6 +4,8 @@
 {{ $socialMenu  := site.Menus.social }}
 {{ $docs        := "/docs/latest" }}
 {{ $getStarted  := "/docs/latest/get-started" }}
+{{ $support  := "/docs/latest/support" }}
+
 <header role="banner">
   <nav class="nav--banner" role="navigation">
     <ul class="nav--menu">
@@ -22,6 +24,12 @@
       <li class="nav--menu-item nav--docs">
         <a href="{{ $getStarted }}" rel="help">
           Tutorials
+        </a>
+      </li>
+
+      <li class="nav--menu-item nav--docs">
+        <a href="{{ $support }}" rel="help">
+          Support
         </a>
       </li>
 
